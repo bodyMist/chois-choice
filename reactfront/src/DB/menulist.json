@@ -1,0 +1,10 @@
+{
+    "menus":[
+        {"id": "Estimate", "menu": "PC 견적"},
+        {"id": "Parts", "menu": "부품"},
+        {"id": "Board", "menu": "게시판"},
+        {"id": "Share", "menu": "공유"},
+        {"id": "Notice", "menu": "공지사항"},
+        {"id": "QnA", "menu": "QnA"}
+    ]
+}
