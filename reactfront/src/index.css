@@ -5,8 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 20px;
-
 }
 
 ol,ul {
@@ -44,19 +42,19 @@ a {
   border-radius: 4px;
 }
 
-.list {
+.menuList {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
 }
-.list li {
+.menuList li {
   flex: 30% 0 0;
   box-sizing: border-box;
   padding: 10px;
 }
 
-.list a {
+.menuList a {
   display: block;
   padding: 20px 0;
   font-weight: bold;
@@ -78,6 +76,69 @@ table td {
   font-size: 26px;
 }
 
-.footer{
+.footer {
   margin-top:auto;
+}
+
+.imgBox {
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top:30px;
+  text-align: center;
+}
+
+.img {
+  width: 700px;
+  margin: 20px 0 20px 0;
+  display: block;
+  border: 1px solid black;
+  padding: 10px 0 10px 0;
+}
+
+.articleList {
+  clear: both;
+  overflow: hidden;
+}
+
+.articleSubject {
+  padding-bottom: 7px;
+  border-bottom: 1px solid #EAEAEA;
+  position: relative;
+  text-align: left;
+}
+
+.articleList .list li .title {
+  display: block;
+  line-height: 1.5;
+  overflow: hidden;
+  padding-top: 4px;
+  color: #000;
+  font-size:1.093rem;
+}
+
+.articleList .list li .info {
+  margin-left: 9px !important;
+  display: block;
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.articleList .list li .info .writer {
+  font-weight: normal;
+  color: #555;
+}
+
+.articleList .list li a.subject {
+  display: block;
+  padding: 3px 3px 3px 7px;
+  text-decoration: none;
+}
+
+em {
+  font-style: normal;
 }
