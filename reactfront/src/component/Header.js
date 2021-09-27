@@ -7,12 +7,8 @@ export default function Header() {
                 <Link to="/">Choi's Choice</Link>
             </h1>
             <div className="menu">
-                <a href="#x" className="link">
-                    로그인
-                </a>
-                <a href="#x" className="link">
-                    회원가입
-                </a>
+                <Link className="link" to="/Login">로그인</Link>
+                <Link className="link" to="/Regist"> 회원가입</Link>
             </div>
         </div>
     );

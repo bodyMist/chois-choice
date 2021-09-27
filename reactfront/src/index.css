@@ -77,6 +77,7 @@ table td {
 }
 
 .footer {
+  padding-top:50px;
   margin-top:auto;
 }
 
@@ -110,6 +111,10 @@ table td {
   text-align: left;
 }
 
+.articleList .list > li:nth-child(2n) {
+  background-color: #EAEAEA;
+}
+
 .articleList .list li .title {
   display: block;
   line-height: 1.5;
@@ -141,4 +146,44 @@ table td {
 
 em {
   font-style: normal;
+}
+
+.login-form {
+  width: 300px;
+  background-color: #EEEFF1;
+  margin-right:auto;
+  margin-left:auto;
+  margin-top:50px;
+  padding:20px;
+  text-align: center;
+  border: none;
+}
+
+.regist-form {
+  width: 300px;
+  background-color: #EEEFF1;
+  margin-right:auto;
+  margin-left:auto;
+  margin-top:50px;
+  padding:20px;
+  text-align: center;
+  border: none;
+}
+
+.text-field {
+  font-size: 14px;
+  padding: 10px;
+  border: none;
+  width: 260px;
+  margin-bottom: 10px;
+}
+
+.submit-btn {
+  font-size: 14px;
+  border: none;
+  padding: 10px;
+  width: 260px;
+  background-color: #1BBC9B;
+  margin-bottom: 30px;
+  color: white;
 }
