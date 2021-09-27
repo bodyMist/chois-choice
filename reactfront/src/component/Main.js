@@ -1,6 +1,6 @@
-import BestPost from "./BestPost";
-import Image from "./Image";
-import MenuList from "./MenuList";
+import BestPost from "../mainPage/BestPost";
+import Image from "../mainPage/Image";
+import MenuList from "../mainPage/MenuList";
 
 export default function Main() {
     return (
