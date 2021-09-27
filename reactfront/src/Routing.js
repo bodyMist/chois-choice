@@ -12,6 +12,7 @@ import Login from "./component/Login";
 import Regist from "./component/Regist";
 import Header from "./component/Header";
 import Footer from "./component/Footer";
+import PcRecommand from "./mainPage/menu/PcEstimate/PcRecommand";
 
 export default function Routing() {
     return (
@@ -27,6 +28,7 @@ export default function Routing() {
                 <Route path="/Share" component={Share} />
                 <Route path="/Notice" component={Notice} />
                 <Route path="/QnA" component={QnA} />
+                <Route path="/PcRecommand" component={PcRecommand} />
                 <Footer />
             </>
         </Switch>
