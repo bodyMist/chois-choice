@@ -8,6 +8,7 @@ export default function Login() {
             <input type="text" name="email" className="text-field" placeholder="ID"/>
             <input type="password" name="password" className="text-field" placeholder="PASSWORD"/>
             <input type="submit" value="로그인" className="submit-btn"/>
+            <input type="submit" value="회원가입" className="submit-btn"/>
 
             <h4>
                 <Link to="/">돌아가기</Link>

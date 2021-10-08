@@ -5,7 +5,7 @@ import MenuList from "../mainPage/MenuList";
 export default function Main() {
     return (
         <>
-            <MenuList></MenuList>
+            {/* <MenuList></MenuList> */}
             <Image></Image>
             <BestPost></BestPost>
         </>

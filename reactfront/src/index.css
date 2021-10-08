@@ -7,9 +7,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-}
+/* *{
+  box-sizing: content-box;
+} */
 
 ol,ul {
   margin: 0;
@@ -20,6 +20,10 @@ a {
   text-decoration: none;
   color: #333;
 }
+.container * {
+  box-sizing: border-box;
+}
+
 .container a {
   display: block;
   margin : 30px;
@@ -35,6 +39,7 @@ a {
   text-align: center;
   color: darkblue;
 }
+
 .header a, .menuList a {
   text-decoration: none;
   color: #333;
@@ -43,12 +48,13 @@ a {
 .App {
   display:flex;
   flex-direction: column;
-  width: 800px;
+  width: 848px;
   margin: 0 auto;
 }
 
 .header {
   position: relative;
+  text-align: center;
 }
 
 .header .menu {
@@ -206,7 +212,7 @@ em {
   padding: 10px;
   width: 260px;
   background-color: #1BBC9B;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   color: white;
 }
 .col-xs-1 {
@@ -416,4 +422,175 @@ button {
 .text-center h5 {
   margin-top: 50px;
   padding-top: 50px;
+}
+
+.dir_location {
+  font-size: 12px;
+  line-height: 15px;
+  color: #333;
+  height: 50px;
+  padding: 15px 0;
+}
+.dir_location * {
+  vertical-align: middle;
+}
+
+.dir_location .dir_list {
+  margin: 0;
+  padding: 0;
+}
+.dir_location::after {
+  clear:both;
+  display:block;
+  clear:both;
+}
+
+.dir_location .dir_item {
+  float: left;
+  margin-right: 10px;
+  padding: 1px 0 1px 15px;
+  background: url(http://img.danawa.com/new/goods_list/v1/img/icon_list_dot.png) no-repeat scroll 0 -344px;
+}
+.dir_location .dir_home {
+  padding-left: 0;
+  background: none;
+}
+
+.dir_location .dir_item select {
+  width: 190px;
+}
+
+.dir_loaction select {
+  font-size: 12px;
+  margin-top: -1px;
+  height: 20px;
+}
+
+.prodlist_wrap {
+  padding-bottom: 100px;
+}
+.dir_location .dir_link {
+  vertical-align: middle;
+}
+
+.optional_nav {
+  border: 1px solid #b3b3b3;
+  font-size: 12px;
+  line-height: 16px;
+  margin-bottom: 20px;
+}
+
+.optional_nav .nav_header {
+  display: block;
+  padding: 12px 15px;
+  background: #fafafa;
+}
+
+.optional_nav .head_info {
+  display: block;
+}
+
+.optional_nav .nav_title {
+  margin: 0 5px 0 0;
+  padding: 1px 0;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: "Malgun Gothic",Dotum,"돋움","Apple SD Gothic Neo",Helvetica,Sans-serif;
+}
+.option_nav h4 {
+  line-height: inherit;
+}
+
+.optional_nav .spec_item {
+  margin: 0;
+  border-top: 1px solid #e6e6e6;
+  padding: 9px 0 0 14px;
+  zoom: 1;
+}
+
+.optional_nav .item_dt {
+  font-weight: bold;
+  float: left;
+  width: 108px;
+  margin: 0;
+  padding: 0 0 8px;
+}
+
+.optional_nav .item_dd {
+  margin: 0 0 0 118px;
+  padding: 0;
+  position: relative;
+}
+
+.optional_nav .item_list {
+  margin: 0px;
+  padding: 0 65px 0 0;
+}
+
+.optional_nav .sub_item {
+  width: 120px;
+}
+
+.optional_nav .sub_item, .optional_nav .brand_item {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 6px 8px 0;
+  zoom: 1;
+}
+
+.optional_nav .sub_item label {
+  display: inline-block;
+  height: 16px;
+  overflow: hidden;
+  padding: 0 2px 0 16px;
+  text-indent: -16px;
+  vertical-align: top;
+  word-break: break-all;
+  font-size: 11px;
+  cursor: default;
+}
+
+.option_nav .sub_item input {
+  vertical-align: top;
+}
+
+.option_nav .nav_header::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.item_list li {
+  list-style: none;
+  text-align: left;
+}
+
+.spec_opt_view {
+  position: absolute;
+  top: 24px;
+  left: 595px;
+  width: 104px;
+  height: 24px;
+  padding-right: 16px;
+  margin: -24px 0 0;
+  text-align: right;
+  zoom: 1;
+}
+
+.btn_spec_view {
+  display: inline;
+  font-size: 11px;
+  padding: 0 16px 0 0;
+  margin: 0;
+  border: none;
+  height: 16px;
+  overflow: visible;
+  background: url("http://img.danawa.com/new/shop_danawa/img/icon_list_dot.png") no-repeat scroll 100% -1966px;
+}
+
+.option_nav button {
+  cursor: pointer;
+  border-radius: 0;
 }
