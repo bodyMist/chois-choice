@@ -37,7 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'api',
+    'member',
+    'post',
+    'estimate',
+    'component',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,12 +60,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'back.urls'
 
+import os
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'frontend', 'build'),
+        ],
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
@@ -66,6 +89,9 @@ TEMPLATES = [
         },
     },
 ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'front', 'build', 'static')
+]
 
 WSGI_APPLICATION = 'back.wsgi.application'
 
@@ -75,8 +101,17 @@ WSGI_APPLICATION = 'back.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'chois-choice',
+        'USER' : 'root',
+        'PASSWORD' : '8344',
+        'HOST' : 'localhost',
+        'PORT' : '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8',
+            'use_unicode': True,
+        },
     }
 }
 
@@ -105,13 +140,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'    # 시간대를 서울로 변경
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False              # 기본 시간대(UTC)를 사용하지 않겠다
 
 
 # Static files (CSS, JavaScript, Images)
