@@ -15,7 +15,7 @@ class Estimation(models.Model):
 
 class EstimationHasComponent(models.Model):
     estimation_estimations = models.OneToOneField(Estimation, models.DO_NOTHING, primary_key=True)
-    component_componenet = models.ForeignKey(Component, models.DO_NOTHING)
+    component_componenet = models.ForeignKey(component_models.Component, models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -28,7 +28,7 @@ class Evaluations(models.Model):
     content = models.CharField(max_length=200)
     written = models.DateTimeField()
     members_members = models.ForeignKey(member_models.Members, models.DO_NOTHING)
-    component_componenet = models.ForeignKey(Component, models.DO_NOTHING)
+    component_componenet = models.ForeignKey(component_models.Component, models.DO_NOTHING)
 
     class Meta:
         managed = False
