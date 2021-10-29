@@ -22,7 +22,7 @@ class Posts(models.Model):
     written = models.DateTimeField()
     members = models.ForeignKey(member_models.Members, models.DO_NOTHING)
     estimations = models.ForeignKey(estimate_models.Estimation, models.DO_NOTHING, blank=True, null=True)
-    upper_post = models.ForeignKey('self', models.DO_NOTHING)
+    upper_post = models.ForeignKey('self', models.DO_NOTHING, blank=True ,null=True)
 
     class Meta:
         managed = False
