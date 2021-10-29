@@ -3,8 +3,7 @@ from component import models as component_models
 from member import models as member_models
 
 # Create your models here.
-class A():
-    testColumn = models.IntegerField(primary_key=True)
+
 
 class Estimation(models.Model):
     estimations_id = models.IntegerField(primary_key=True)
