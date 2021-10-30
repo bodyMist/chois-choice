@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.urls.conf import re_path
-from django.views.generic import TemplateView
+from component import views as component_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('member.urls')),
+    path('member/', include('member.urls')),
+    path('Estimate/cpu', component_views.CpuView.as_view({'get':'list'})),
 ]
