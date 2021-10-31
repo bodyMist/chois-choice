@@ -20,5 +20,5 @@ from component import views as component_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('member/', include('member.urls')),
-    path('Estimate/cpu', component_views.CpuView.as_view({'get':'list'})),
+    path('api/', component_views.ComponentView.as_view()),
 ]
