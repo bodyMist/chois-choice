@@ -10,11 +10,9 @@ export default function PcEstimate() {
     const getPartInf=(id)=> {
         console.log(id);
         axios
-        .get(`/api?${id}`)
-        .then(({data})=>{
-            setList({
-                setList: data.Item
-            })
+        .get(`/api?type=${id}`)
+        .then(response=>{
+            setList(response.data);
         })
         .catch(e => {
             console.error(e);
