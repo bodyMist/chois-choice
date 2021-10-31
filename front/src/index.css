@@ -93,7 +93,7 @@ a {
   background-color: dodgerblue;
 }
 
-table {
+/* table {
   border-collapse: collapse;
   width: 100%;
 }
@@ -103,7 +103,7 @@ table td {
   border: 1px solid #ccc;
   text-align: center;
   font-size: 26px;
-}
+} */
 
 .footer {
   padding-top: 50px;
@@ -121,7 +121,8 @@ table td {
 }
 
 .img {
-  width: 700px;
+  width: 80px;
+  height: 80px;
   margin: 20px 0 20px 0;
   display: block;
   border: 1px solid black;
@@ -233,7 +234,7 @@ em {
 }
 
 .container-partSelect {
-  width: 40%;
+  width: 60%;
   position: relative;
   min-height: 1px;
   padding-right: 15px;
@@ -315,7 +316,7 @@ em {
 .btn {
   margin-left: -1px;
   white-space: unset;
-
+  height:34px;
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -355,11 +356,25 @@ button {
 }
 
 .StuffList {
+  display: table-row-group;
   border-bottom: 1px solid #e9e9e9;
   width: 100%;
   float: left;
   position: relative;
   min-height: 1px;
+  vertical-align: middle;
+}
+
+.StuffList .btn {
+  width: 75%;
+  float: right;
+  position: relative;
+  min-height: 1px;
+  padding: 5px;
+  margin-top:0px;
+  font-size: 14px;
+  white-space: normal;
+  text-align: left;
 }
 
 .StuffIcon {
@@ -370,9 +385,28 @@ button {
   min-height: 1px;
 }
 
-.text-left {
+.StuffIcon img {
+  width: 56px;
+  height: 56px;
+  text-align: center;
+}
+
+.WillSelect .text{
   width: 75%;
   float: left;
+  position: relative;
+  min-height: 1px;
+  padding: 5px;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 14px;
+  white-space: normal;
+  text-align: left;
+}
+
+.text-left {
+  width: 75%;
+  float: right;
   position: relative;
   min-height: 1px;
   padding: 5px;
@@ -381,6 +415,8 @@ button {
   white-space: normal;
   text-align: left;
 }
+
+
 
 .label {
   position: relative;
@@ -408,8 +444,9 @@ button {
 
 .MainSufferArear {
   float: right;
-  width: 60%;
-  padding-left: 100px;
+  width: 40%;
+  background-color : #f0f0f0;
+  margin-left:1.6em;
 }
 
 .second {
@@ -757,4 +794,12 @@ button {
 .prod_spec_set .spec_item_last{
   background-image: none;
   padding-right:0;
+}
+
+.scroll_box {
+  border-top:1px solid #b1b4bd;
+  height: 400px;
+  clear: both;
+  overflow-x:hidden;
+  overflow-y:scroll;
 }

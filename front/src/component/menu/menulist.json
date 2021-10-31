@@ -5,5 +5,16 @@
         {"id": "Board", "menu": "게시판"},
         {"id": "Notice", "menu": "공지사항"},
         {"id": "QnA", "menu": "QnA"}
+    ],
+    "class":[
+        {"id": 1, "name":"CPU"},
+        {"id": 2, "name":"그래픽카드"},
+        {"id": 3, "name":"메인보드"},
+        {"id": 4, "name":"메모리"},
+        {"id": 5, "name":"HDD"},
+        {"id": 6, "name":"SSD"},
+        {"id": 7, "name":"파워"},
+        {"id": 8, "name":"쿨러"},
+        {"id": 9, "name":"케이스"}
     ]
 }
