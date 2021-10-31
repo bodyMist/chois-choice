@@ -1,7 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import Part from"./Part";
+import PartList from "./PartList";
 
-export default function PartSelect() {
+export default function PartSelect(props) {
     const handleClick = (e) => {
         console.log("e.target.name = ", e.target.id);
         axios
@@ -30,7 +32,7 @@ export default function PartSelect() {
                    </div>
                </div>
                <div className="StuffListView">
-                   <div className="StuffList">
+                   {/* <div className="StuffList">
                        <div className="StuffIcon">
                             <img alt="1" src="/1.jpg"/>
                        </div>
@@ -39,7 +41,8 @@ export default function PartSelect() {
                             <span className="label label-info">추천</span>
                             <span>AMD 3600 (정품)</span>
                        </div>
-                   </div>
+                   </div> */}
+                   <PartList list={props.list}/>
                </div>
             </div>
         </div>
