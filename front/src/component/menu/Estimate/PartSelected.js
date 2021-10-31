@@ -9,10 +9,10 @@ export default function PartSelected({getPartInf, sList}) {
     return (
         <div className="MainSufferArear">
             {
-                data.class.map((classData, index) => (
+                data.class.map((classData) => (
                     <div className="WillSelect StuffOnePart">
                         <div className="text StuffInfor" id={classData.id} onClick={getPartName}>
-                            {classData.name} : 
+                            {classData.name} : {sList[classData.id-1].name}
                         </div>
                     </div>
                 ))

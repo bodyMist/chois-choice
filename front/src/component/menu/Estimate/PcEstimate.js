@@ -7,7 +7,17 @@ import { useEffect } from "react";
 
 export default function PcEstimate() {
     const [list, setList] = useState([]);
-    const [sList, setSlist] = useState([]);
+    const [sList, setSlist] = useState([
+        {id: 1, name: "미선택"},
+        {id: 2, name: "미선택"},
+        {id: 3, name: "미선택"},
+        {id: 4, name: "미선택"},
+        {id: 5, name: "미선택"},
+        {id: 6, name: "미선택"},
+        {id: 7, name: "미선택"},
+        {id: 8, name: "미선택"},
+        {id: 9, name: "미선택"}
+    ]);
     useEffect(()=>{
         axios
             .get(`/api?type=1`)
@@ -30,7 +40,10 @@ export default function PcEstimate() {
     };
 
     const selectPart = (component_id) => {
-        setSlist(list.filter((list) => list.component_id == component_id))
+        const l = list.filter((list) => list.component_id == component_id)[0]
+        let array = [...sList];
+        array[l.data_type - 1] = {id: l.data_type, name: l.name};
+        setSlist(array);        
     };
 
     return (
