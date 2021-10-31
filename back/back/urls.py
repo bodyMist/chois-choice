@@ -20,7 +20,6 @@ from component import views as component_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path('.*', TemplateView.as_view(template_name='index.html')),
     path('member/', include('member.urls')),
-    path('api/', component_views.ComponentView.as_view()),
+    path('api', component_views.ComponentView.as_view()),
 ]
