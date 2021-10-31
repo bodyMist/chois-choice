@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default function PartSelect() {
     const handleClick = (e) => {
+        console.log("e.target.name = ", e.target.id);
         axios
             .get("/api")
             .then(function (response) {
@@ -23,7 +24,7 @@ export default function PartSelect() {
                     <div className="input-group">
                         <input type="text" className="form-control" placeholder="부품 명 검색"></input>
                         <div className="input-group-btn">
-                            <button className="btn btn-default" type="button" onClick={handleClick}>검색</button>
+                            <button className="btn btn-default" type="button" onClick={handleClick} id="search">검색</button>
                             <button className="btn btn-default" type="button">초기화</button>
                         </div>
                    </div>
