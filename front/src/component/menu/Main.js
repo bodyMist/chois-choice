@@ -3,11 +3,11 @@
 // import MenuList from "../mainPage/MenuList";
 
 export default function Main() {
-    return (
-        <>
-            {/* <MenuList></MenuList> */}
-            {/* <Image></Image>
+  return (
+    <>
+      {/* <MenuList></MenuList> */}
+      {/* <Image></Image>
             <BestPost></BestPost> */}
-        </>
-    );
+    </>
+  );
 }
