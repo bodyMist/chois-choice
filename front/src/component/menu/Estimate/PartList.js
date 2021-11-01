@@ -9,6 +9,7 @@ export default function PartList({list, selectPart}) {
          image_url={listdata.image_url}
          name={listdata.name}
          selectPart={selectPart}
+         key={listdata}
         />
       ))}
     </tbody>
