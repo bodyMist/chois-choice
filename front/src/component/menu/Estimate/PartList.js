@@ -2,7 +2,7 @@ import Part from "./Part";
 
 export default function PartList({list, selectPart}) {
   return (
-    <div className="StuffList">
+    <tbody className="StuffList">
       {list.map((listdata) => (
         <Part 
          component_id={listdata.component_id}
@@ -11,6 +11,6 @@ export default function PartList({list, selectPart}) {
          selectPart={selectPart}
         />
       ))}
-    </div>
+    </tbody>
   );
 }
