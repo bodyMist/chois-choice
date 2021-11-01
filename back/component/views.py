@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import generics
 from rest_framework.views   import APIView
 from rest_framework.response import Response
@@ -13,9 +13,14 @@ class ComponentView(APIView):
         serializer = ComponentSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class CpuDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CpuSerializer
-    queryset = Cpu.objects.all()
+class CpuDetail(APIView):
+    def get_object(self, pk):
+        return get_object_or_404(Cpu, pk=pk)
+
+    def get(self, request, pk, format=None):
+        cpu = self.get_object(pk)
+        serializer = CpuSerializer(cpu)
+        return Response(serializer.data)
 
 class GpuDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GpuSerializer
