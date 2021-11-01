@@ -4,7 +4,7 @@ import Login from "./title/Login";
 import Regist from "./title/Regist";
 import Main from "./menu/Main";
 import Estimate from "./menu/Estimate/Estimate";
-import Parts from "./menu/Parts/Parts"
+import Parts from "./menu/Part/Parts"
 import Tab from "./tabs/Tab";
 export default function Router() {
   return (
