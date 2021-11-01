@@ -8,7 +8,7 @@ from .models import *
 # Create your views here.
 class ComponentView(APIView):
     def get(self, request, format=None):
-        type = request.GET['type']
+        type = request.GET['id']
         queryset = Component.objects.filter(data_type=type)
         serializer = ComponentSerializer(queryset, many=True)
         return Response(serializer.data)
