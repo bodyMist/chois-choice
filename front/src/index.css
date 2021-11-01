@@ -617,7 +617,6 @@ button {
 }
 
 .btn_spec_view {
-  display: inline;
   font-size: 11px;
   padding: 0 16px 0 0;
   margin: 0;
@@ -625,6 +624,10 @@ button {
   height: 16px;
   overflow: visible;
   background: url("http://img.danawa.com/new/shop_danawa/img/icon_list_dot.png") no-repeat scroll 100% -1966px;
+}
+
+.optional_nav .btn_view_less {
+  background-position: 100% -1982px;
 }
 
 .option_nav button {
