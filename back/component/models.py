@@ -16,7 +16,7 @@ class Component(models.Model):
 
 
 class Cpu(models.Model):
-    component_component = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
     socket = models.CharField(max_length=50, blank=True, null=True)
     generation = models.CharField(max_length=50, blank=True, null=True)
     core = models.IntegerField(blank=True, null=True)
@@ -39,7 +39,7 @@ class Cpu(models.Model):
 
 
 class Mainboard(models.Model):
-    component_component = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
     category = models.CharField(max_length=20, blank=True, null=True)
     socket = models.CharField(max_length=20, blank=True, null=True)
     chipset = models.CharField(max_length=20, blank=True, null=True)
@@ -66,7 +66,7 @@ class Mainboard(models.Model):
         db_table = 'mainboard'
 
 class Memory(models.Model):
-    component_component = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
     device = models.CharField(max_length=20, blank=True, null=True)
     type = models.CharField(max_length=20, blank=True, null=True)
     size = models.CharField(max_length=20, blank=True, null=True)
@@ -80,7 +80,7 @@ class Memory(models.Model):
         db_table = 'memory'
 
 class Gpu(models.Model):
-    component_component = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
     chipset = models.CharField(max_length=20, blank=True, null=True)
     thickness = models.IntegerField(blank=True, null=True)
     memory_type = models.CharField(max_length=20, blank=True, null=True)
@@ -103,7 +103,7 @@ class Gpu(models.Model):
 
 
 class Hdd(models.Model):
-    component_component = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
     size = models.CharField(max_length=30, blank=True, null=True)
     capacity = models.CharField(max_length=30, blank=True, null=True)
     interface = models.CharField(max_length=30, blank=True, null=True)
@@ -116,7 +116,7 @@ class Hdd(models.Model):
         db_table = 'hdd'
 
 class Ssd(models.Model):
-    component_component = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
     formfactor = models.CharField(max_length=20, blank=True, null=True)
     interface = models.CharField(max_length=30, blank=True, null=True)
     capacity = models.CharField(max_length=20, blank=True, null=True)
@@ -142,7 +142,7 @@ class Cooler(models.Model):
     tdp = models.IntegerField(blank=True, null=True)
     intel_socket = models.CharField(max_length=100, blank=True, null=True)
     amd_socket = models.CharField(max_length=100, blank=True, null=True)
-    component_componenet = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_componenet = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         managed = False
@@ -159,7 +159,7 @@ class Power(models.Model):
     pcie_hexa = models.CharField(max_length=20, blank=True, null=True)
     sata = models.CharField(max_length=20, blank=True, null=True)
     ide = models.CharField(max_length=20, blank=True, null=True)
-    component_componenet = models.OneToOneField(Component, models.DO_NOTHING, primary_key=True)
+    component_componenet = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         managed = False
@@ -176,7 +176,7 @@ class Case(models.Model):
     width = models.IntegerField(blank=True, null=True)
     depth = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
-    component_componenet = models.OneToOneField('Component', models.DO_NOTHING, primary_key=True)
+    component_componenet = models.OneToOneField('Component', on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         managed = False

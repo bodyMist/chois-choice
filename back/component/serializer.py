@@ -7,9 +7,14 @@ class ComponentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CpuSerializer(serializers.ModelSerializer):
+    component = ComponentSerializer(read_only=True)
     class Meta:
         model = Cpu
         fields = '__all__'
+
+    @classmethod
+    def setup_preloading(cls, queryset):
+        return queryset.select_related("component_component")
 
 class GpuSerializer(serializers.ModelSerializer):
     class Meta:

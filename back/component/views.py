@@ -13,6 +13,11 @@ class ComponentView(APIView):
         serializer = ComponentSerializer(queryset, many=True)
         return Response(serializer.data)
 
+class CpuList(APIView):
+    def get(self, requset):
+        serializer = CpuSerializer(Cpu.objects.all())
+        return Response(serializer.data)
+
 class CpuDetail(APIView):
     def get_object(self, pk):
         return get_object_or_404(Cpu, pk=pk)
@@ -21,6 +26,7 @@ class CpuDetail(APIView):
         cpu = self.get_object(pk)
         serializer = CpuSerializer(cpu)
         return Response(serializer.data)
+
 
 class GpuDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GpuSerializer

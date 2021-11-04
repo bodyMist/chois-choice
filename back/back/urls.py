@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('member/', include('member.urls')),
     path('api', component_views.ComponentView.as_view()),
+    path('cpu', component_views.CpuList.as_view()),
 ]
