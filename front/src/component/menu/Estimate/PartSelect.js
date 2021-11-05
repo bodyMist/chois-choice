@@ -2,45 +2,44 @@ import React, { useState } from "react";
 import axios from "axios";
 import PartList from "./PartList";
 
-export default function PartSelect({ list, selectPart }) {
-  const handleClick = () => {
-    const data_type = list[0].data_type;
+export default function PartSelect({ list, selectPart, searchPart, resetPart }) {
+  const search = () => {
     const word = document.querySelector(".form-control").value;
-    axios
-      .get(`/component`, {
-        params: {
-          id: data_type,
-          word,
-        },
-      })
-      .then((response) => {
-        list = response.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    searchPart(word)
   };
+  const reset = () => {
+    resetPart()
+  }
 
+  const onKeyPress = (e) => {
+    if(e.key==='Enter') {
+      search()
+    }
+  }
+  const none = {
+    display: "none",
+  }
   return (
     <div className="container-partSelect">
       <div className="parts">
         <div className="searchInputArea">
-          <form className="input-group">
+          <form className="input-group" onKeyPress={onKeyPress}>
             <input
               type="text"
               className="form-control"
               placeholder="부품 명 검색"
             ></input>
+            <input type="text" style={none}/>
             <div className="input-group-btn">
               <button
                 className="btn btn-default"
                 type="button"
-                onClick={handleClick}
+                onClick={search}
                 id="search"
               >
                 검색
               </button>
-              <button className="btn btn-default" type="reset">
+              <button className="btn btn-default" type="reset" onClick={reset} >
                 초기화
               </button>
             </div>
