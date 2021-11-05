@@ -4,7 +4,7 @@ import Login from "./title/Login";
 import Regist from "./title/Regist";
 import Main from "./menu/Main";
 import Estimate from "./menu/Estimate/Estimate";
-import Parts from "./menu/Part/Parts"
+import PartsViewer from "./menu/Part/PartsViewer"
 import Tab from "./tabs/Tab";
 export default function Router() {
   return (
@@ -16,7 +16,7 @@ export default function Router() {
         <Tab />
         <Route exact path="/" component={Main} />
         <Route path="/Estimate" component={Estimate} />
-        <Route path="/Parts" component={Parts} />
+        <Route path="/Parts" component={PartsViewer} />
       </>
     </Switch>
   );
