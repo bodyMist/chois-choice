@@ -20,7 +20,7 @@ export default function PcEstimate() {
   ]);
   useEffect(() => {
     axios
-      .get(`/api?id=1`)
+      .get(`/component?id=1`)
       .then((response) => {
         setList(response.data);
       })
@@ -30,7 +30,7 @@ export default function PcEstimate() {
   }, []);
   const getPartInf = (id) => {
     axios
-      .get(`/api`, { params: { id } })
+      .get(`/component`, { params: { id } })
       .then((response) => {
         setList(response.data);
       })
