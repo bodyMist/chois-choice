@@ -4,9 +4,15 @@ import PartList from "./PartList";
 
 export default function PartSelect({ list, selectPart }) {
   const handleClick = () => {
+    const data_type = list[0].data_type;
     const word = document.querySelector(".form-control").value;
     axios
-      .get(`/component`, { params: { word } })
+      .get(`/component`, {
+        params: {
+          id: data_type,
+          word,
+        },
+      })
       .then((response) => {
         list = response.data;
       })
