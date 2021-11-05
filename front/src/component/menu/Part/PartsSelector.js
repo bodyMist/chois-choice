@@ -1,17 +1,29 @@
 import { useState } from "react";
-import Item from "./Item";
+import ItemList from "./ItemList";
 import inf from "../menulist.json";
 
-export default function PartsSelector({getPartItem, list}) {
+export default function PartsSelector({getPartItems, list, getItemsByOption}) {
     const [Selected, setSelected] = useState("1")
-    const getValue = (e) => {
-        const value = e.target.value;
-        getPartItem(value);
-    }
     const handleSelect=(e)=>{
         setSelected(e.target.value);
         getValue(e);
     }
+    const getValue = (e) => {
+        const value = e.target.value;
+        getPartItems(value);
+    }
+
+    const [checkedItems, setCheckedItems] = useState(new Set());
+    const checkedItemHandler = (inf, isChecked) => {
+        if (isChecked) {
+            checkedItems.add(inf);
+            setCheckedItems(checkedItems);
+        } else if(!isChecked && checkedItems.has(inf)) {
+          checkedItems.delete(inf);
+          setCheckedItems(checkedItems);
+        }
+        getItemsByOption(checkedItems)
+    };
     return (
         <>
             <div className="dir_location">
@@ -53,57 +65,14 @@ export default function PartsSelector({getPartItem, list}) {
                 <div className="spec_list_wrap">
                     <div className="detail_list_wrap">
                         <div className="spec_list">
-                            <dl className="spec_item">
-                                <dt className="item_dt">제조사</dt>
-                                <dd className="item_dd">
-                                    <ul className="item_list item_list_popular">
-                                        <li className="sub_item">
-                                            <label title="인텔">
-                                                <input
-                                                    type="checkbox"
-                                                    name="makerCode[]"
-                                                    title="인텔"
-                                                />
-                                                &nbsp;인텔
-                                            </label>
-                                        </li>
-                                        <li className="sub_item">
-                                            <label title="AMD">
-                                                <input
-                                                    type="checkbox"
-                                                    name="makerCode[]"
-                                                    title="AMD"
-                                                />
-                                                &nbsp;AMD
-                                            </label>
-                                        </li>
-                                    </ul>
-                                </dd>
-                            </dl>
-                            <dl className="spec_item">
-                                <dt className="item_dt">인텔 CPU종류</dt>
-                                <Item inf={inf.generation_intel} />
-                            </dl>
-                            <dl className="spec_item">
-                                <dt className="item_dt">AMD CPU종류</dt>
-                                <Item inf={inf.generation_amd} />
-                            </dl>
-                            <dl className="spec_item">
-                                <dt className="item_dt">소켓 구분</dt>
-                                <Item inf={inf.socket}/>
-                            </dl>
-                            <dl className="spec_item">
-                                <dt className="item_dt">제조 공정</dt>
-                                <Item inf={inf.thickness}/>
-                            </dl>
-                            <dl className="spec_item">
-                                <dt className="item_dt">코어 수</dt>
-                                <Item inf={inf.core}/>
-                            </dl>
-                            <dl className="spec_item">
-                                <dt className="item_dt">쓰레드 수</dt>
-                                <Item inf={inf.thread}/>
-                            </dl>
+                            {inf.Parts[Selected-1].map((items)=>{
+                                return (
+                                <dl className="spec_item">
+                                <dt className="item_dt">{items[0].title}</dt>
+                                    <ItemList inf={items} checkedItemHandler={checkedItemHandler} id={items[0].id} />
+                                </dl>)
+                                ;
+                            })}
                         </div>
                     </div>
                     <div className="spec_price">

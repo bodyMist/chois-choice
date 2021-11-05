@@ -46,12 +46,47 @@ export default function PcEstimate() {
     setSlist(array);
   };
 
+  const resetPart = () => {
+    const id = list[0].data_type;
+    axios
+      .get(`/component`, { params: { id } })
+      .then((response) => {
+        setList(response.data);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  const searchPart = (word) => {
+    const data_type = list[0].data_type;
+    axios
+      .get(`/component`, {
+        params: {
+          id: data_type,
+          word,
+        },
+      })
+      .then((response) => {
+        console.log(response.data)
+        if(response.data.length === 0) {
+          alert("검색 결과가 없습니다.")
+        }
+        else {
+          setList(response.data)
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   return (
     <div className="container">
       {/* <h3>PC 견적</h3> */}
       <Link to="/PcRecommand">견적 추천</Link>
       <div className="container-pc">
-        <PartSelect list={list} selectPart={selectPart} />
+        <PartSelect list={list} selectPart={selectPart} searchPart={searchPart} resetPart={resetPart} />
         <PartSelected getPartInf={getPartInf} sList={sList} />
       </div>
     </div>

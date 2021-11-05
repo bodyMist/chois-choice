@@ -17,6 +17,118 @@
         {"id": 8, "name":"쿨러"},
         {"id": 9, "name":"케이스"}
     ],
+    "Parts":[
+       [
+           [
+               {"title":"제조사", "id":"manufacture"},
+               {"name":"인텔"}, {"name":"AMD"}
+           ],
+           [
+            {"title":"인텔 CPU종류", "id":"generation"},
+            {"name":"코어i9-11세대"}, {"name":"코어i7-11세대"},
+            {"name":"코어i5-11세대"}, {"name":"코어i9-10세대"},
+            {"name":"코어i7-10세대"}, {"name":"코어i5-10세대"},
+            {"name":"코어i3-11세대"}, {"name":"펜티엄 골드"},
+            {"name":"코어X-시리즈"}, {"name":"코어i9-9세대"},
+            {"name":"코어i7-9세대"}, {"name":"코어i5-9세대"},
+            {"name":"코어i3-9세대"}, {"name":"코어i7-8세대"},
+            {"name":"코어i5-8세대"}, {"name":"코어i3-8세대"},
+            {"name":"코어i7-7세대"}, {"name":"코어i5-7세대"},
+            {"name":"코어i3-7세대"}, {"name":"코어i7-6세대"},
+            {"name":"코어i5-6세대"}, {"name":"코어i3-6세대"},
+            {"name":"코어i7-4세대"}, {"name":"코어i5-4세대"},
+            {"name":"코어i3-4세대"}, {"name":"코어i7-2세대"},
+            {"name":"코어i5-2세대"}, {"name":"코어i3-2세대"},
+            {"name":"코어2듀오"}, {"name":"펜티엄"},
+            {"name":"셀러론"}, {"name":"셀러론 콘로-L"},
+            {"name":"제온 E"}, {"name":"제온 골드"},
+            {"name":"제온 실버"}, {"name":"제온 브론즈"}, {"name":"제온"}
+            ],
+            [
+            {"title":"AMD CPU종류", "id":"generation"},
+            {"name":"라이젠9-4세대"}, {"name":"라이젠7-4세대"},
+            {"name":"라이젠5-4세대"}, {"name":"라이젠9-3세대"},
+            {"name":"라이젠7-3세대"}, {"name":"라이젠5-3세대"},
+            {"name":"라이젠3-3세대"}, {"name":"라이젠7-2세대"},
+            {"name":"라이젠5-2세대"}, {"name":"라이젠3-2세대"},
+            {"name":"라이젠7-1세대"}, {"name":"라이젠5-1세대"},
+            {"name":"라이젠3-1세대"}, {"name":"라이젠 스레드리퍼"},
+            {"name":"애슬론 APU"}, {"name":"라이젠7 PRO"},
+            {"name":"라이젠5 PRO"}, {"name":"라이젠3 PRO"},
+            {"name":"EPYC"}, {"name":"FX"},
+            {"name":"리치랜드-A4"}, {"name":"라노-A6"},
+            {"name":"페넘II-X6"}, {"name":"페넘II-X4"},
+            {"name":"라이젠 쓰레드리퍼 PRO"}
+            ],
+            [
+            {"title":"소켓 구분", "id":"socket"},
+            {"name":"인텔(소켓1200)"},{"name":"인텔(소켓1151v2)"},
+            {"name":"인텔(소켓2066)"},{"name":"AMD(소켓AM4)"},
+            {"name":"AMD(소켓TR4)"},{"name":"인텔(소켓4189)"},
+            {"name":"인텔(소켓3647)"},{"name":"인텔(소켓1151)"},
+            {"name":"인텔(소켓2011-V3)"},{"name":"인텔(소켓2011)"},
+            {"name":"인텔(소켓1366)"},{"name":"인텔(소켓1150)"},
+            {"name":"인텔(소켓1155)"},{"name":"인텔(소켓1156)"},
+            {"name":"인텔(소켓775)"},{"name":"AMD(소켓sWRX8"},
+            {"name":"AMD(소켓sTRX4)"},{"name":"AMD(소켓SP3)"},
+            {"name":"AMD(소켓FM2)"},{"name":"AMD(소켓FM1)"},
+            {"name":"AMD(소켓AM3+)"},{"name":"AMD(소켓AM3)"}
+            ],
+            [
+            {"title":"제조 공정", "id":"thickness"},
+            {"name":"7nm"}, {"name":"12nm"}, {"name":"14nm"}, {"name":"10nm"},
+            {"name":"22nm"}, {"name":"45nm"}, {"name":"32nm"}, {"name":"65nm"}
+            ],
+            [
+            {"title":"코어 수", "id":"core"},
+            {"name":"2코어"}, {"name": "4코어"}, {"name":"6코어"},
+            {"name":"8코어"}, {"name": "10코어"}, {"name":"12코어"},
+            {"name":"14코어"}, {"name": "16코어"}, {"name":"18코어"},
+            {"name":"20코어"}, {"name": "22코어"}, {"name":"24코어"},
+            {"name":"28코어"}, {"name": "32코어"}, {"name":"48코어"},
+            {"name":"64코어"}
+            ],
+            [
+            {"title":"쓰레드 수", "id":"thread"},
+            {"name":"2쓰레드"}, {"name":"4쓰레드"}, {"name":"6쓰레드"},
+            {"name":"8쓰레드"}, {"name":"12쓰레드"}, {"name":"16쓰레드"},
+            {"name":"20쓰레드"}, {"name":"24쓰레드"}, {"name":"28쓰레드"},
+            {"name":"32쓰레드"}, {"name":"36쓰레드"}, {"name":"40쓰레드"},
+            {"name":"44쓰레드"}, {"name":"48쓰레드"}, {"name":"56쓰레드"},
+            {"name":"64쓰레드"}, {"name":"96쓰레드"}, {"name":"128쓰레드"}
+            ]
+        ],
+        [
+            {"manufacture":[
+                {"title":"제조사"}, {"id":"manufacturer"},
+                {"name":"MSI"}, {"name":"이엠텍"}, {"name":"GAINWARD"},
+                {"name":"ZOTAC"}, {"name":"갤럭시"}, {"name":"ASUS"},
+                {"name":"GIGABYTE"}, {"name":"PowerColor"}, {"name":"AFOX"},
+                {"name":"AFOX"}, {"name":"AKiTiO"}, {"name":"AMD"},
+                {"name":"ARKTEK"}, {"name":"ASRock"}, {"name":"ATUM"},
+                {"name":"COLORFUL"}, {"name":"EVGA"}, {"name":"FORSA"},
+                {"name":"HIS"}, {"name":"INNO3D"}, {"name":"KEDA"},
+                {"name":"MANLI"}, {"name":"MAXSUN"}, {"name":"NETSTOR"},
+                {"name":"NVIDIA"}, {"name":"PALIT"}, {"name":"PNY"},
+                {"name":"Razer"}, {"name":"SAPPHIRE"}, {"name":"SNK테크"},
+                {"name":"SOYO"}, {"name":"Sonnet"}, {"name":"TAGER"},
+                {"name":"TUL"}, {"name":"XFX"}, {"name":"리드텍"},
+                {"name":"매트록스"}, {"name":"세컨드찬스"}, {"name":"액슬"},
+                {"name":"엠탑코리아"}
+            ]},
+            {"thickness":[
+                {"title":"GPU 제조 공정"}, {"id":"thickness"},
+                {"name":"7nm"}, {"name":"8nm"}, {"name":"12nm"},
+                {"name":"14nm"}, {"name":"16nm"}, {"name":"28nm"},
+                {"name":"40nm"}, {"name":"55nm"}
+            ]},
+            {"chipset":[
+                
+            ]}
+        ]
+
+    ]
+    ,
     "generation_intel":[
         {"name":"코어i9-11세대"}, {"name":"코어i7-11세대"},
         {"name":"코어i5-11세대"}, {"name":"코어i9-10세대"},
@@ -36,7 +148,8 @@
         {"name":"셀러론"}, {"name":"셀러론 콘로-L"},
         {"name":"제온 E"}, {"name":"제온 골드"},
         {"name":"제온 실버"}, {"name":"제온 브론즈"}, {"name":"제온"}
-    ],
+        ]
+    ,
     "generation_amd":[
         {"name":"라이젠9-4세대"}, {"name":"라이젠7-4세대"},
         {"name":"라이젠5-4세대"}, {"name":"라이젠9-3세대"},
@@ -49,8 +162,9 @@
         {"name":"라이젠5 PRO"}, {"name":"라이젠3 PRO"},
         {"name":"EPYC"}, {"name":"FX"},
         {"name":"리치랜드-A4"}, {"name":"라노-A6"},
-        {"name":"페넘II-X6"}, {"name":"페넘II-X4"}
-    ],
+        {"name":"페넘II-X6"}, {"name":"페넘II-X4"},
+        {"name":"라이젠 쓰레드리퍼 PRO"}
+        ],
     "socket":[
         {"name":"인텔(소켓1200)"},{"name":"인텔(소켓1151v2)"},
         {"name":"인텔(소켓2066)"},{"name":"AMD(소켓AM4)"},
