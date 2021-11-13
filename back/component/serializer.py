@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework import serializers
 from .models import *
 
@@ -6,52 +7,111 @@ class ComponentSerializer(serializers.ModelSerializer):
         model = Component
         fields = '__all__'
 
-class CpuSerializer(serializers.ModelSerializer):
-    component = ComponentSerializer(read_only=True)
+
+class CpuDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Cpu
         fields = '__all__'
+class CpuListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Cpu
+        fields = ("component_component","core", "thread", "basic_clock", "max_clock")
 
-    @classmethod
-    def setup_preloading(cls, queryset):
-        return queryset.select_related("component_component")
 
-class GpuSerializer(serializers.ModelSerializer):
+class GpuDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Gpu
         fields = '__all__'
+class GpuListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Gpu
+        fields = ("component_component","memory_type","memory_capacity","required_power")    
 
-class MainboardSerializer(serializers.ModelSerializer):
+
+class MainboardDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Mainboard
         fields = '__all__'
+class MainboardListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Mainboard
+        fields = ("component_component", "category","chipset_detail",
+        "memory_type","memory_speed","memory_channel")
 
-class MemorySerializer(serializers.ModelSerializer):
+
+class MemoryDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Memory
         fields = '__all__'
+class MemoryListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Memory
+        fields = ("type","capacity","clock","timing")
 
-class HddSerializer(serializers.ModelSerializer):
+
+class HddDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Hdd
         fields = '__all__'
+class HddListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Hdd
+        fields = ("size", "capacity","interface")
 
-class SsdSerializer(serializers.ModelSerializer):
+
+class SsdDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Ssd
         fields = '__all__'
+class SsdListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Ssd
+        fields = ("forfactor","capacity","interface")
 
-class PowerSerializer(serializers.ModelSerializer):
+
+class PowerDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Power
         fields = '__all__'
+class PowerListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Power
+        fields = ("type", "certification", "output")
 
-class CoolerSerializer(serializers.ModelSerializer):
+
+class CoolerDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Cooler
         fields = '__all__'
+class CoolerListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Cooler
+        fields = ("system", "connector", "tdp")
 
-class CaseSerializer(serializers.ModelSerializer):
+
+class CaseDetailSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
     class Meta:
         model = Case
         fields = '__all__'
+class CaseListSerializer(serializers.ModelSerializer):
+    component_component = ComponentSerializer(required=True)
+    class Meta:
+        model = Case
+        fields = ("type","size","compatibility")

@@ -1,5 +1,3 @@
-from django.shortcuts import get_object_or_404, render
-from rest_framework import generics
 from rest_framework.views   import APIView
 from rest_framework.response import Response
 from .serializer import *
@@ -17,49 +15,112 @@ class ComponentView(APIView):
         serializer = ComponentSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class CpuList(APIView):
-    def get(self, requset):
-        serializer = CpuSerializer(Cpu.objects.all())
+class CpuListView(APIView):
+    def get(self, request, format=None):
+        queryset = Cpu.objects.all().only("core", "thread", "basic_clock", "max_clock")
+        serializer = CpuListSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class CpuDetail(APIView):
-    def get_object(self, pk):
-        return get_object_or_404(Cpu, pk=pk)
-
-    def get(self, request, pk, format=None):
-        cpu = self.get_object(pk)
-        serializer = CpuSerializer(cpu)
+class CpuDetailView(APIView):
+    def get(self, request, format=None):
+        pk = request.GET['id']
+        queryset = Cpu.objects.get(component_component=pk)
+        serializer = CpuDetailSerializer(queryset)
         return Response(serializer.data)
 
+class GpuListView(APIView):
+    def get(self, request, format=None):
+        queryset = Gpu.objects.all().only("memory_type","memory_capacity","required_power")
+        serializer = GpuListSerializer(queryset, many=True)
+        return Response(serializer.data)
+class GpuDetailView(APIView):
+    def get(self, request, format=None):
+        pk = request.GET['id']
+        queryset = Gpu.objects.get(component_component=pk)
+        serializer = GpuDetailSerializer(queryset)
+        return Response(serializer.data)
 
-class GpuDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = GpuSerializer
-    queryset = Gpu.objects.all()
+class MainboardListView(APIView):
+    def get(self, request, format=None):
+        queryset = Mainboard.objects.all().only("component_component", "category","chipset_detail",
+        "memory_type","memory_speed","memory_channel")
+        serializer = MainboardListSerializer(queryset, many=True)
+        return Response(serializer.data)
+class MainboardDetailView(APIView):
+    def get(self, request, format=None):
+        pk = request.GET['id']
+        queryset = Mainboard.objects.get(component_component=pk)
+        serializer = MainboardDetailSerializer(queryset)
+        return Response(serializer.data)
 
-class SsdDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = SsdSerializer
-    queryset = Ssd.objects.all()
+class MemoryListView(APIView):
+    def get(self, request, format=None):
+        queryset=Memory.objects.all().only("type","capacity","clock","timing")
+        serializer=MemoryListSerializer(queryset, many=True)
+        return Response(serializer.data)
+class MemoryDetailView(APIView):
+    def get(self,request,format=None):
+        pk = request.GET['id']
+        queryset = Memory.objects.get(component_component=pk)
+        serializer = MainboardDetailSerializer(queryset)
+        return Response(serializer.data)
 
-class MainboardDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = MainboardSerializer
-    queryset = Mainboard.objects.all()
+class HddListView(APIView):
+    def get(self,request,format=None):
+        queryset=Hdd.objects.all().only("size", "capacity","interface")
+        serializer=HddListSerializer(queryset, many=True)
+        return Response(serializer.data)
+class HddDetailView(APIView):
+    def get(self,request,format=None):
+        pk = request.GET['id']
+        queryset = Hdd.objects.get(component_component=pk)
+        serializer = HddDetailSerializer(queryset)
+        return Response(serializer.data)
 
-class MemoryDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = MemorySerializer
-    queryset = Memory.objects.all()
+class SsdListView(APIView):
+    def get(self, request, format=None):
+        queryset = Ssd.objects.all().only("forfactor","capacity","interface")
+        serializer=SsdListSerializer(queryset, many=True)
+        return Response(serializer.data)
+class SsdDetailView(APIView):
+    def get(self, request, format=None):
+        pk=request.GET['id']
+        queryset = Ssd.objects.get(component_component=pk)
+        serializer=SsdDetailSerializer(queryset)
+        return Response(serializer.data)
 
-class HddDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = HddSerializer
-    queryset = Hdd.objects.all()
+class PowerListView(APIView):
+    def get(self, request, format=None):
+        queryset = Power.objects.all().only("type", "certification", "output")
+        serializer=PowerListSerializer(queryset, many=True)
+        return Response(serializer.data)
+class PowerDetailView(APIView):
+    def get(self, request, format=None):
+        pk=request.GET['id']
+        queryset=Power.objects.get(component_component=pk)
+        serializer=PowerDetailSerializer(queryset)
+        return Response(serializer.data)
 
-class PowerDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = PowerSerializer
-    queryset = Power.objects.all()
+class CoolerListView(APIView):
+    def get(self,request,format=None):
+        queryset=Cooler.objects.all().only("system", "connector", "tdp")
+        serializer=CoolerListSerializer(queryset, many=True)
+        return Response(serializer.data)
+class CoolerDetailView(APIView):
+    def get(self,request,format=None):
+        pk=request.GET['id']
+        queryset=Cooler.objects.get(component_component=pk)
+        serializer=CoolerDetailSerializer(queryset)
+        return Response(serializer.data)
 
-class CoolerDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CoolerSerializer
-    queryset = Cooler.objects.all()
-
-class CaseDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CaseSerializer
-    queryset = Case.objects.all()
+class CaseListView(APIView):
+    def get(self,request,format=None):
+        queryset=Case.objects.all().only("type","size","compatibility")
+        serializer=CaseListSerializer(queryset)
+        return Response(serializer.data)
+class CaseDetailView(APIView):
+    def get(self, request, format=None):
+        pk=request.GET['id']
+        queryset=Case.objects.get(component_component=pk)
+        serializer=CaseDetailSerializer(queryset)
+        return Response(serializer.data)
