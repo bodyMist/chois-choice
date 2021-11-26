@@ -1,16 +1,13 @@
 import { useState } from "react";
-import ItemList from "./ItemList";
+import OptionList from "./OptionList";
 import inf from "../menulist.json";
 
-export default function PartsSelector({getPartItems, list, getItemsByOption}) {
+export default function PartsSelector({getPartItems, getItemsByOption}) {
+    const option = ['cpu', 'gpu', 'mainboard','memory','hdd', 'ssd', 'power', 'cooler', 'case']
     const [Selected, setSelected] = useState("1")
     const handleSelect=(e)=>{
         setSelected(e.target.value);
-        getValue(e);
-    }
-    const getValue = (e) => {
-        const value = e.target.value;
-        getPartItems(value);
+        getPartItems(option[e.target.value-1]);
     }
 
     const [checkedItems, setCheckedItems] = useState(new Set());
@@ -69,7 +66,7 @@ export default function PartsSelector({getPartItems, list, getItemsByOption}) {
                                 return (
                                 <dl className="spec_item">
                                 <dt className="item_dt">{items[0].title}</dt>
-                                    <ItemList inf={items} checkedItemHandler={checkedItemHandler} id={items[0].id} />
+                                    <OptionList inf={items} checkedItemHandler={checkedItemHandler} id={items[0].id} />
                                 </dl>)
                                 ;
                             })}
