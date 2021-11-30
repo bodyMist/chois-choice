@@ -25,6 +25,8 @@
            ],
            [
             {"title":"인텔 CPU종류", "id":"generation"},
+            {"name":"코어i9-12세대"}, {"name":"코어i7-12세대"},
+            {"name":"코어i5-12세대"},
             {"name":"코어i9-11세대"}, {"name":"코어i7-11세대"},
             {"name":"코어i5-11세대"}, {"name":"코어i9-10세대"},
             {"name":"코어i7-10세대"}, {"name":"코어i5-10세대"},
@@ -121,9 +123,64 @@
                 {"name":"7nm"}, {"name":"8nm"}, {"name":"12nm"},
                 {"name":"14nm"}, {"name":"16nm"}, {"name":"28nm"},
                 {"name":"40nm"}, {"name":"55nm"}
+            ],
+            [
+                {"title":"NVIDIA 칩셋", "id":"chipset"},
+                {"name":"RTX 3090"}, {"name":"RTX 3080 Ti"}, {"name":"RTX 3080"},
+                {"name":"RTX 3070 Ti"}, {"name":"RTX 3070"}, {"name":"RTX 3060 Ti"},
+                {"name":"RTX 3060"}, {"name":"RTX 2060 SUPER"}, {"name":"RTX 2060"},
+                {"name":"GTX 1660 SUPER"}, {"name":"TITAN V"}, {"name":"RTX 2080 Ti"},
+                {"name":"RTX 2080 SUPER"},{"name":"RTX 2080"},{"name":"RTX 2070 SUPER"},
+                {"name":"RTX 2070"},{"name":"GTX 1660 Ti"},{"name":"GTX 1660"},
+                {"name":"GTX 1650 SUPER"},{"name":"GTX 1650"},{"name":"GT1030"},
+                {"name":"GT730"},{"name":"GT710"},{"name":"GTX1080 Ti"},
+                {"name":"GTX1080"},{"name":"GTX1070 Ti"},{"name":"GTX1070"},
+                {"name":"GTX1060"},{"name":"GTX1050 Ti"},{"name":"GTX1050"},
+                {"name":"T1000"},{"name":"T600"},{"name":"T400"},
+                {"name":"RTX A6000"},{"name":"RTX A4000"},{"name":"M4000"},
+                {"name":"M5000"},{"name":"M6000"},{"name":"GTX950"},
+                {"name":"GTX970"},{"name":"GTX960"},{"name":"GTX650"},
+                {"name":"GTX650 Ti"},{"name":"GTX660"},{"name":"GTX660 TI"},
+                {"name":"GTX780"},{"name":"GTX760"},{"name":"GTX780 Ti"},
+                {"name":"GTX770"},{"name":"GTX750"},{"name":"GTX750 Ti"},
+                {"name":"P600"},{"name":"TX 6000"},{"name":"RTX 8000"},
+                {"name":"GV100"},{"name":"K5000"},{"name":"P400"},
+                {"name":"P620"},{"name":"P2200"},{"name":"P5000"},
+                {"name":"P4000"},{"name":"P1000"},{"name":"NVS 510"},
+                {"name":"G210"},{"name":"RTX 5000"},{"name":"RTX 4000"},
+                {"name":"GT610"},{"name":"지포스 GTS250"},{"name":"쿼드로 FX"},
+                {"name":"쿼드로"}
+            ]
+        ],
+        [
+            [
+                {"title":"제조사", "id":"manufacturer"},
+                {"name":"ASUS"}, {"name":"MSI"}, {"name":"ASRock"}, 
+                {"name":"GIGABYTE"}, {"name":"ECS"}, {"name":"AFOX"}, 
+                {"name":"AMD"}, {"name":"ASRock Rack"}, {"name":"Arduino"}, 
+                {"name":"BIOSTAR"}, {"name":"COLORFUL"}, {"name":"EVGA"}, 
+                {"name":"FOXCONN"}, {"name":"JETWAY"}, {"name":"LattePanda"}, 
+                {"name":"Maxtang"}, {"name":"NVIDIA"}, {"name":"NZXT"}, 
+                {"name":"PEGATRON"}, {"name":"Raspberry Pi"}, {"name":"Retroflag"}, 
+                {"name":"Supermicro"}, {"name":"TYAN"}, {"name":"디지탈그린텍"}, 
+                {"name":"마이크로닉스"}, {"name":"삼성전자"}, {"name":"아이노비아"}, 
+                {"name":"인텔"}, {"name":"코코아팹"}
+            ],
+            [
+                {"title":"CPU 소켓", "id":"cpu socket"},
+                {"name":"인텔(소켓1700)"}, {"name":"인텔(소켓1200)"}, {"name":"인텔(소켓1151v2)"},
+                {"name":"인텔(소켓2066)"}, {"name":"AMD(소켓 AM4)"}, {"name":"AMD(소켓TR4)"},
+                {"name":"AMD(소켓sWRX8)"}, {"name":"AMD(소켓sTRX4)"}, {"name":"AMD(소켓SP3)"},
+                {"name":"인텔(소켓1151)"}, {"name":"인텔(소켓3647)"}, {"name":" 인텔(소켓2011-V3)"},
+                {"name":"인텔(소켓2011)"}, {"name":"인텔(소켓1150)"}, {"name":"인텔(소켓1155)"},
+                {"name":"인텔(소켓1156)"}, {"name":"인텔(소켓775)"}, {"name":"인텔(CPU내장)"},
+                {"name":"AMD(소켓AM3)"}, {"name":"AMD(소켓AM2+)"}
+            ],
+            [
+                {"title":"세부 칩셋"}
+
             ]
         ]
-
     ]
 }
    
