@@ -8,7 +8,7 @@ export default function Part({ component_id, image_url, name, selectPart, key })
             <td className="StuffIcon">
                 <img alt="1" src={image_url} />
             </td>
-            <td className="btn text-left" id={component_id} onClick={getPart} key={key} >
+            <td className="btn" id={component_id} onClick={getPart} key={key} >
                 {name}
             </td>
         </tr>
