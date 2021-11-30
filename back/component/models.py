@@ -11,7 +11,7 @@ class Component(models.Model):
     data_type = models.IntegerField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'component'
 
 
@@ -34,7 +34,7 @@ class Cpu(models.Model):
     has_graphic = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cpu'
 
 
@@ -62,7 +62,7 @@ class Mainboard(models.Model):
     sata_slot = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'mainboard'
 
 class Memory(models.Model):
@@ -76,7 +76,7 @@ class Memory(models.Model):
     volt = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'memory'
 
 class Gpu(models.Model):
@@ -98,7 +98,7 @@ class Gpu(models.Model):
     interface = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'gpu'
 
 
@@ -112,7 +112,7 @@ class Hdd(models.Model):
     speed = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'hdd'
 
 class Ssd(models.Model):
@@ -127,7 +127,7 @@ class Ssd(models.Model):
     tbw = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ssd'
 
 
@@ -145,7 +145,7 @@ class Cooler(models.Model):
     component_componenet = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cooler'
 
 
@@ -162,7 +162,7 @@ class Power(models.Model):
     component_componenet = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'power'
 
 
@@ -179,5 +179,5 @@ class Case(models.Model):
     component_componenet = models.OneToOneField('Component', on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'case'
