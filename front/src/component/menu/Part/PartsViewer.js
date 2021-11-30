@@ -6,7 +6,6 @@ import ItemList from "./ItemList";
 export default function PartsViewer() {
   const [list, setList] = useState([]);
   const [fList, setFList] = useState([]);
-  const a = 'data';
   useEffect(() => {
       axios
           .get(`/component/cpu/list`)
@@ -35,9 +34,7 @@ export default function PartsViewer() {
   // 옵션 선택된 것으로 정보 필터링하는거 만들어야함.
   const getItemsByOption = (checkedItems) => {
     [...checkedItems].map((items)=>{
-        const id = items.id;
-        const title = items.title;
-        const newList = list.filter((list) => list.component_component.manufacture == "인텔 코어i7-12세대");
+        const newList = list.filter((list) => {return JSON.stringify(list).search(items.id) !== -1;});
         console.log(newList)
         const array = [...fList, ...newList];
         console.log(array);
