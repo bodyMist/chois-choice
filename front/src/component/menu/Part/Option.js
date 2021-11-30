@@ -6,9 +6,8 @@ export default function Option({ key, title, checkedItemHandler, id }) {
         setChecked(!bChecked);
         const title = e.target.title
         const id = e.target.id
-        const inf = {title, id};
 
-        checkedItemHandler(inf, e.target.checked);
+        checkedItemHandler(title, e.target.checked);
     }
     return (
         <>

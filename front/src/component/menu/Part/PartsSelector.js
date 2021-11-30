@@ -11,10 +11,11 @@ export default function PartsSelector({getPartItems, getItemsByOption}) {
     }
 
     const [checkedItems, setCheckedItems] = useState(new Set());
-    const checkedItemHandler = (inf, isChecked) => {
+    const checkedItemHandler = (inf, isChecked) => {        
         if (isChecked) {
             checkedItems.add(inf);
             setCheckedItems(checkedItems);
+            
         } else if(!isChecked && checkedItems.has(inf)) {
           checkedItems.delete(inf);
           setCheckedItems(checkedItems);
@@ -66,7 +67,7 @@ export default function PartsSelector({getPartItems, getItemsByOption}) {
                                 return (
                                 <dl className="spec_item">
                                 <dt className="item_dt">{items[0].title}</dt>
-                                    <OptionList inf={items} checkedItemHandler={checkedItemHandler} id={items[0].id} />
+                                    <OptionList inf={items} checkedItemHandler={checkedItemHandler}/>
                                 </dl>)
                                 ;
                             })}
