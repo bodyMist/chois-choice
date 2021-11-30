@@ -23,6 +23,7 @@ export default function PcEstimate() {
       .get(`/component?id=1`)
       .then((response) => {
         setList(response.data);
+        console.log(response.data)
       })
       .catch((e) => {
         console.error(e);
@@ -33,6 +34,7 @@ export default function PcEstimate() {
       .get(`/component`, { params: { id } })
       .then((response) => {
         setList(response.data);
+        
       })
       .catch((e) => {
         console.error(e);
