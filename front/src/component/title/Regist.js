@@ -7,7 +7,9 @@ export default function Regist() {
             <input type="text" name="email" className="text-field" placeholder="ID"/>
             <input type="password" name="password" className="text-field" placeholder="PASSWORD"/>
             <input type="password" name="repeat-password" className="text-field" placeholder="REPEAT PASSWORD"/>
-            <input type="submit" className="submit-btn"/>
+            <div className="submit-form">
+                <input type="submit" className="submit-btn"/>
+            </div>
             <h4>
                 <Link to="/">돌아가기</Link>
             </h4>
