@@ -4,24 +4,23 @@ from member import models as member_models
 
 # Create your models here.
 
-
 class Estimation(models.Model):
     estimations_id = models.IntegerField(primary_key=True)
     users = models.ForeignKey(member_models.Members, models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'estimation'
 
 
 class EstimationHasComponent(models.Model):
     estimation_estimations = models.OneToOneField(Estimation, models.DO_NOTHING, primary_key=True)
-    component_componenet = models.ForeignKey(component_models.Component, models.DO_NOTHING)
+    component_component = models.ForeignKey(component_models.Component, models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'estimation_has_component'
-        unique_together = (('estimation_estimations', 'component_componenet'),)
+        unique_together = (('estimation_estimations', 'component_component'),)
 
 
 class Evaluations(models.Model):
@@ -29,10 +28,10 @@ class Evaluations(models.Model):
     content = models.CharField(max_length=200)
     written = models.DateTimeField()
     members_members = models.ForeignKey(member_models.Members, models.DO_NOTHING)
-    component_componenet = models.ForeignKey(component_models.Component, models.DO_NOTHING)
+    component_component = models.ForeignKey(component_models.Component, models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'evaluations'
 
 
@@ -42,7 +41,7 @@ class Annotations(models.Model):
     explain = models.TextField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'annotations'
 
 
@@ -59,5 +58,14 @@ class Uses(models.Model):
     rec_memory = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'uses'
+
+class BenchMark(models.Model):
+    benchmark_id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=100, blank=False, null=False)
+    score = models.FloatField(blank=False, null=False)
+
+    class Meta:
+        managed = True
+        db_table = 'benchmark'
