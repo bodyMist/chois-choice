@@ -11,14 +11,15 @@ export default function PartsViewer() {
           .get(`/component/cpu/list`)
           .then((response) => {
               setList(response.data);
-              setFList(response.data);
+              console.log(response.data[0])
+              setFList(response.data)
+            //   console.log(response.data)
           })
           .catch((e) => {
               console.error(e);
           });
           
   }, []);
-  console.log(list)
   const getPartItems = (id) => {
       //중분류 선택한것으로 백에서 정보 받아와야함.
       axios
@@ -33,18 +34,27 @@ export default function PartsViewer() {
 
   // 옵션 선택된 것으로 정보 필터링하는거 만들어야함.
   const getItemsByOption = (checkedItems) => {
-    [...checkedItems].map((items)=>{
-        const newList = list.filter((list) => {return JSON.stringify(list).search(items.id) !== -1;});
-        console.log(newList)
-        const array = [...fList, ...newList];
-        console.log(array);
-        setFList(array);
-    })
-    console.log(fList)
-    const otherArray= [...list, ...fList];
-    setList(otherArray);
-    console.log(checkedItems)
+      console.log(checkedItems)
+      if(checkedItems.size != 0) {
+        let array = [];
+      [...checkedItems].map((items)=>{
+          const newList = fList.filter((listItem) => {
+              return JSON.stringify(listItem).search(items) != -1;
+          });
+          array = [...array, ...newList];
+      })
+      setList([...array]);
+      }
+      else {
+          setList([...fList])
+      }
+      
   }
+
+  const saveList = (sList) => {
+
+  }
+
   return (
       <div className="prodlist_wrap">
           <PartsSelector
