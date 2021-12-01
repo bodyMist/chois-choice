@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Component(models.Model):
     component_id = models.IntegerField(primary_key=True)
-    manufacture = models.CharField(max_length=20)
+    manufacture = models.CharField(max_length=30)
     release = models.CharField(max_length=20, blank=True, null=True)
     name = models.CharField(max_length=100)
     image_url = models.CharField(max_length=200, blank=True, null=True)
@@ -22,8 +22,8 @@ class Cpu(models.Model):
     core = models.IntegerField(blank=True, null=True)
     thread = models.IntegerField(blank=True, null=True)
     thickness = models.IntegerField(blank=True, null=True)
-    basic_clock = models.CharField(max_length=10, blank=True, null=True)
-    max_clock = models.CharField(max_length=10, blank=True, null=True)
+    basic_clock = models.CharField(max_length=20, blank=True, null=True)
+    max_clock = models.CharField(max_length=20, blank=True, null=True)
     l2_cache = models.CharField(db_column='L2_cache', max_length=10, blank=True, null=True)  # Field name made lowercase.
     l3_cache = models.CharField(db_column='L3_cache', max_length=10, blank=True, null=True)  # Field name made lowercase.
     tdp = models.IntegerField(db_column='TDP', blank=True, null=True)  # Field name made lowercase.
@@ -51,8 +51,8 @@ class Mainboard(models.Model):
     memory_speed = models.CharField(max_length=30, blank=True, null=True)
     memory_slot = models.IntegerField(blank=True, null=True)
     memory_channel = models.IntegerField(blank=True, null=True)
-    memory_capacity = models.CharField(max_length=20, blank=True, null=True)
-    graphic = models.CharField(max_length=20, blank=True, null=True)
+    memory_capacity = models.CharField(max_length=30, blank=True, null=True)
+    graphic = models.CharField(max_length=30, blank=True, null=True)
     vga_connect = models.CharField(max_length=20, blank=True, null=True)
     pcie_hex = models.IntegerField(blank=True, null=True)
     pcie_octa = models.IntegerField(blank=True, null=True)
@@ -93,8 +93,8 @@ class Gpu(models.Model):
     used_power = models.CharField(max_length=20, blank=True, null=True)
     power_port = models.CharField(max_length=20, blank=True, null=True)
     power_case = models.CharField(max_length=20, blank=True, null=True)
-    width = models.CharField(max_length=20, blank=True, null=True)
-    height = models.CharField(max_length=20, blank=True, null=True)
+    width = models.IntegerField(blank=True, null=True)
+    height = models.IntegerField(blank=True, null=True)
     interface = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
@@ -133,7 +133,7 @@ class Ssd(models.Model):
 
 class Cooler(models.Model):
     system = models.CharField(max_length=10, blank=True, null=True)
-    fan_size = models.IntegerField(blank=True, null=True)
+    fan_size = models.CharField(max_length=20, blank=True, null=True)
     fan_thickness = models.IntegerField(blank=True, null=True)
     connector = models.CharField(max_length=20, blank=True, null=True)
     loudness = models.CharField(max_length=30, blank=True, null=True)
@@ -152,9 +152,9 @@ class Cooler(models.Model):
 class Power(models.Model):
     type = models.CharField(max_length=20, blank=True, null=True)
     output = models.CharField(max_length=20, blank=True, null=True)
-    certification = models.CharField(max_length=20, blank=True, null=True)
-    main_cable = models.CharField(max_length=20, blank=True, null=True)
-    sub_cable = models.CharField(max_length=20, blank=True, null=True)
+    certification = models.CharField(max_length=50, blank=True, null=True)
+    main_cable = models.CharField(max_length=50, blank=True, null=True)
+    sub_cable = models.CharField(max_length=50, blank=True, null=True)
     pcie_octa = models.CharField(max_length=20, blank=True, null=True)
     pcie_hexa = models.CharField(max_length=20, blank=True, null=True)
     sata = models.CharField(max_length=20, blank=True, null=True)
@@ -168,8 +168,8 @@ class Power(models.Model):
 
 class Case(models.Model):
     type = models.CharField(max_length=20, blank=True, null=True)
-    size = models.CharField(max_length=20, blank=True, null=True)
-    compatibility = models.CharField(max_length=20, blank=True, null=True)
+    size = models.CharField(max_length=30, blank=True, null=True)
+    compatibility = models.CharField(max_length=100, blank=True, null=True)
     storage = models.IntegerField(blank=True, null=True)
     pci = models.IntegerField(blank=True, null=True)
     fan = models.IntegerField(blank=True, null=True)
