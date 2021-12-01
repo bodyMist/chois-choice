@@ -17,7 +17,7 @@ class ComponentView(APIView):
 
 class CpuListView(APIView):
     def get(self, request, format=None):
-        queryset = Cpu.objects.all().only("core", "thread", "basic_clock", "max_clock", "thickness", "socket", "generation")
+        queryset = Cpu.objects.all().only("basic_clock", "max_clock", "socket", "generation")
         serializer = CpuListSerializer(queryset, many=True)
         return Response(serializer.data)
 

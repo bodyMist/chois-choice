@@ -17,7 +17,7 @@ class CpuListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Cpu
-        fields = ("component_component","core", "thread", "basic_clock", "max_clock", "thickness", "socket", "generation")
+        fields = ("component_component","basic_clock", "max_clock","socket", "generation")
 
 
 class GpuDetailSerializer(serializers.ModelSerializer):
