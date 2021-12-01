@@ -11,8 +11,8 @@ export default function PartsViewer() {
           .get(`/component/cpu/list`)
           .then((response) => {
               setList(response.data);
-              console.log(response.data[0])
-              setFList(response.data)
+              setFList(response.data);
+              
             //   console.log(response.data)
           })
           .catch((e) => {
@@ -26,6 +26,7 @@ export default function PartsViewer() {
           .get(`/component/${id}/list`)
           .then((response) => {
               setList(response.data);
+              setFList(response.data);
           })
           .catch((e) => {
               console.error(e);
