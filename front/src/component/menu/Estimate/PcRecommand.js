@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import list from "./purpose.json";
 import Option from "./Option"
+import Detail from "./Detail"
 
 const InputGroupPc = styled.div`
     display: flex;
@@ -38,9 +39,21 @@ const List = styled.li`
 display: inline-block;
 `
 export default function PcRecommand() {
-    const checkedItemHandler = (id, isChecked) =>{
-        if(isChecked)
-            console.log(id);
+    console.log(list.purpose)
+    const [detail, setDetail] = useState([])
+    const checkedHandler = (e) => {
+        const id = e.target.id
+        const checkboxes = document.getElementsByName("type");
+        checkboxes.forEach((cb)=>{
+            cb.checked=false;
+        })
+        e.target.checked = true;
+        if(id!=3) {
+            const sdetail = list.purpose[id-1]
+            setDetail([...sdetail])
+        }
+        console.log(e.checked)
+        console.log(detail)
     }
     return (
         <div className="container">
@@ -55,11 +68,24 @@ export default function PcRecommand() {
                 {list.menus.map((item)=>{
                     return (
                         <List>
-                            <Option id={item.id} checkedItemHandler={checkedItemHandler} type={item.type}/>
+                            <input
+                                type="checkbox"
+                                id={item.id}
+                                onChange={checkedHandler}
+                                name="type"
+                            />
+                            &nbsp;{item.type}&nbsp;
                         </List>
                     );
                 })}
                 
+                </ul>
+                <ul>
+                {detail.map((item)=>(
+                    <List>
+                        <Detail id={item.id} name={item.name}/>
+                    </List>
+                ))}
                 </ul>
                 <SubmitBtn>제출</SubmitBtn>
             </InputGroupPc>

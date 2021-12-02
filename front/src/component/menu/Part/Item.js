@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { Link, Route, Switch } from "react-router-dom";
 const MainInfo = styled.div`
 positon: relative;
 width: 100%;
 display: table;
 border-bottom: 1px solid #b3b3b3;
 `
-const Name = styled.a`
+const Name = styled(Link)`
 display : inline;
 font-weight: bold;
 color: #000;
@@ -31,12 +32,6 @@ max-width:100%;
 max-height:100%;
 `
 export default function Item({list}) {
-  // const data_type = list.component_component.data_type;
-  // 이게 맞나;
-  // if(data_type == 1) {}
-  // else if(data_type == 2) {}
-  // else if(data_type == 3) {}
-  // else if(data_type == 4) {}
  
   return(
     <li>
@@ -46,7 +41,11 @@ export default function Item({list}) {
             <IMG src={list.component_component.image_url} />
           </ThumbLink>
         </Thumb>
-        <Name>
+        <Name id={list.component_component.component_id} 
+        to={{
+          pathname:`/ComponentDetail`,
+          data: list
+        }}>
           {list.component_component.name}
         </Name>
       </MainInfo>

@@ -65,7 +65,7 @@ export default function PartsSelector({getPartItems, getItemsByOption}) {
                         <div className="spec_list">
                             {inf.Parts[Selected-1].map((items)=>{
                                 return (
-                                <dl className="spec_item">
+                                <dl className="spec_item" key={items[0].title}>
                                 <dt className="item_dt">{items[0].title}</dt>
                                     <OptionList inf={items} checkedItemHandler={checkedItemHandler}/>
                                 </dl>)

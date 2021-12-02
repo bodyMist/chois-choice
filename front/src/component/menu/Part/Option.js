@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Option({ key, title, checkedItemHandler, id }) {
+export default function Option({ title, checkedItemHandler, id }) {
     const [bChecked, setChecked] = useState(false);
     const checkedHandler = (e) => {
         setChecked(!bChecked);
@@ -11,9 +11,9 @@ export default function Option({ key, title, checkedItemHandler, id }) {
     }
     return (
         <>
-            <li className="sub_item" key={key}>
+            <li className="sub_item">
                 <label title={title}>
-                    <input type="checkbox" title={title} checked={bChecked} onChange={checkedHandler} id={id}/>
+                    <input type="checkbox" title={title} checked={bChecked} onChange={checkedHandler} id={id} />
                     &nbsp;{title}&nbsp;
                 </label>
             </li>
