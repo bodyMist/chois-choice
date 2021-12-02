@@ -10,13 +10,7 @@ export default function Option({ id, checkedItemHandler, type }) {
     }
     return (
         <>
-            <input
-                type="checkbox"
-                id={id}
-                onChange={checkedHandler}
-                checked={bChecked}
-            />
-            &nbsp;{type}&nbsp;
+            
         </>
     );
 }

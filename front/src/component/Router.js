@@ -8,6 +8,7 @@ import PartsViewer from "./menu/Part/PartsViewer"
 import Tab from "./tabs/Tab";
 import PcRecommand from "./menu/Estimate/PcRecommand";
 import Board from "./menu/Board/Board";
+import ComponentDetail from "./menu/Part/ComponentDetail";
 export default function Router() {
   return (
     <Switch>
@@ -21,6 +22,7 @@ export default function Router() {
         <Route path="/Parts" component={PartsViewer} />
         <Route path="/PcRecommand" component={PcRecommand} />
         <Route path="/Board" component={Board} />
+        <Route path="/ComponentDetail" component={ComponentDetail} />
       </>
     </Switch>
   );
