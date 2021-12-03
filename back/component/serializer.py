@@ -17,8 +17,8 @@ class CpuListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Cpu
-        fields = ("component_component","basic_clock", "max_clock","socket", "generation")
-
+        #fields = ("component_component","basic_clock", "max_clock","socket", "generation")
+        fields = '__all__'
 
 class GpuDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -29,8 +29,8 @@ class GpuListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Gpu
-        fields = ("component_component","memory_type","memory_capacity","required_power")    
-
+        #fields = ("component_component","memory_type","memory_capacity","required_power")    
+        fields = '__all__'
 
 class MainboardDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -41,9 +41,9 @@ class MainboardListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Mainboard
-        fields = ("component_component", "category","chipset_detail",
-        "memory_type","memory_speed","memory_channel")
-
+        #fields = ("component_component", "category","chipset_detail",
+        #"memory_type","memory_speed","memory_channel")
+        fields = '__all__'
 
 class MemoryDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -54,8 +54,8 @@ class MemoryListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Memory
-        fields = ("type","capacity","clock","timing")
-
+        #fields = ("type","capacity","clock","timing")
+        fields = '__all__'
 
 class HddDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -66,8 +66,8 @@ class HddListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Hdd
-        fields = ("size", "capacity","interface")
-
+        #fields = ("size", "capacity","interface")
+        fields = '__all__'
 
 class SsdDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -78,8 +78,8 @@ class SsdListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Ssd
-        fields = ("forfactor","capacity","interface")
-
+        #fields = ("forfactor","capacity","interface")
+        fields = '__all__'
 
 class PowerDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -90,8 +90,8 @@ class PowerListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Power
-        fields = ("type", "certification", "output")
-
+        #fields = ("type", "certification", "output")
+        fields = '__all__'
 
 class CoolerDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -102,8 +102,8 @@ class CoolerListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Cooler
-        fields = ("system", "connector", "tdp")
-
+        #fields = ("system", "connector", "tdp")
+        fields = '__all__'
 
 class CaseDetailSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
@@ -114,4 +114,5 @@ class CaseListSerializer(serializers.ModelSerializer):
     component_component = ComponentSerializer(required=True)
     class Meta:
         model = Case
-        fields = ("type","size","compatibility")
+        #fields = ("type","size","compatibility")
+        fields = '__all__'
