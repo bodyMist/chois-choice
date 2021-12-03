@@ -29,7 +29,7 @@ class Cpu(models.Model):
     tdp = models.IntegerField(db_column='TDP', blank=True, null=True)  # Field name made lowercase.
     pcie = models.CharField(db_column='PCIe', max_length=50, blank=True, null=True)  # Field name made lowercase.
     memory_type = models.CharField(max_length=50, blank=True, null=True)
-    memory_bus = models.IntegerField(blank=True, null=True)
+    memory_bus = models.CharField(max_length=50, blank=True, null=True)
     memory_channel = models.IntegerField(blank=True, null=True)
     has_graphic = models.CharField(max_length=50, blank=True, null=True)
 
