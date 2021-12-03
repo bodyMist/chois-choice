@@ -26,7 +26,7 @@ export default function PartsViewer() {
             let array = [];
             [...checkedItems].map((items) => {
                 const newList = fList.filter((listItem) => {
-                    return JSON.stringify(listItem).search(items) != -1;
+                    return JSON.stringify(listItem).indexOf(items) != -1;
                 });
                 array = [...array, ...newList];
             });
@@ -89,7 +89,7 @@ export default function PartsViewer() {
             .get(`/component/${id}/list`)
             .then((response) => {
                 setFList(response.data);
-                setList(response.data);
+                setListByPage([...response.data])
             })
             .catch((e) => {
                 console.error(e);

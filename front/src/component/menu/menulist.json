@@ -63,7 +63,7 @@
             {"name":"라이젠 쓰레드리퍼 PRO"}
             ],
             [
-            {"title":"소켓 구분", "id":"socket"}, {"name":"소켓1700"},
+            {"title":"소켓 구분", "id":"socket"}, {"name":"인텔(소켓1700)"},
             {"name":"인텔(소켓1200)"},{"name":"인텔(소켓1151v2)"},
             {"name":"인텔(소켓2066)"},{"name":"AMD(소켓AM4)"},
             {"name":"AMD(소켓TR4)"},{"name":"인텔(소켓4189)"},
@@ -96,12 +96,6 @@
                 {"name":"엠탑코리아"}
             ],
             [
-                {"title":"GPU 제조 공정", "id":"thickness"},
-                {"name":"7nm"}, {"name":"8nm"}, {"name":"12nm"},
-                {"name":"14nm"}, {"name":"16nm"}, {"name":"28nm"},
-                {"name":"40nm"}, {"name":"55nm"}
-            ],
-            [
                 {"title":"NVIDIA 칩셋", "id":"chipset"},
                 {"name":"RTX 3090"}, {"name":"RTX 3080 Ti"}, {"name":"RTX 3080"},
                 {"name":"RTX 3070 Ti"}, {"name":"RTX 3070"}, {"name":"RTX 3060 Ti"},
@@ -127,6 +121,22 @@
                 {"name":"G210"},{"name":"RTX 5000"},{"name":"RTX 4000"},
                 {"name":"GT610"},{"name":"지포스 GTS250"},{"name":"쿼드로 FX"},
                 {"name":"쿼드로"}
+            ], 
+            [
+                {"title":"AMD 칩셋", "id":"chipset"},
+                {"name":"RX 6900 XT"}, {"name":"RX 6800 XT"}, {"name":"RX 6800"},
+                {"name":"RX 6700 XT"}, {"name":"RX 6600 XT"}, {"name":"RX 5700 XT"},
+                {"name":"RX 5600 XT"}, {"name":"RX 6600"}, {"name":"RX 5500 XT"},
+                {"name":"RX Vega 56"}, {"name":"RX 590"}, {"name":"RX 580"},
+                {"name":"RX 570"}, {"name":"RX 560"}, {"name":"RX 560D"},
+                {"name":"RX 550"}, {"name":"RX 480"}, {"name":"RX 470"},
+                {"name":"RX 460"}, {"name":"R9 290"}, {"name":"W6800"},
+                {"name":"W6600"}, {"name":"W5700"}, {"name":"W5500"},
+                {"name":"WX9100"}, {"name":"WX8200"}, {"name":"WX7100"},
+                {"name":"WX5100"}, {"name":"WX4100"}, {"name":"WX3200"},
+                {"name":"WX3100"}, {"name":"WX2100"}, {"name":"DUO"},
+                {"name":"GPRO E8870"}, {"name":"GRPO 4200"}, {"name":"GPRO 6200"},
+                {"name":"GPRO 8200"}
             ]
         ],
         [
@@ -144,18 +154,90 @@
                 {"name":"인텔"}, {"name":"코코아팹"}
             ],
             [
-                {"title":"CPU 소켓", "id":"cpu socket"},
-                {"name":"인텔(소켓1700)"}, {"name":"인텔(소켓1200)"}, {"name":"인텔(소켓1151v2)"},
-                {"name":"인텔(소켓2066)"}, {"name":"AMD(소켓 AM4)"}, {"name":"AMD(소켓TR4)"},
-                {"name":"AMD(소켓sWRX8)"}, {"name":"AMD(소켓sTRX4)"}, {"name":"AMD(소켓SP3)"},
-                {"name":"인텔(소켓1151)"}, {"name":"인텔(소켓3647)"}, {"name":" 인텔(소켓2011-V3)"},
-                {"name":"인텔(소켓2011)"}, {"name":"인텔(소켓1150)"}, {"name":"인텔(소켓1155)"},
-                {"name":"인텔(소켓1156)"}, {"name":"인텔(소켓775)"}, {"name":"인텔(CPU내장)"},
-                {"name":"AMD(소켓AM3)"}, {"name":"AMD(소켓AM2+)"}
+                {"title":"제품 분류", "id":"category"},
+                {"name":"인텔 CPU용"}, {"name":"AMD CPU용"}, {"name":"임베디드"},
+                {"name":"주변기기"}
+            ], 
+            [
+                {"title":"CPU 소켓", "id":"socket"},
+                {"name":"인텔(소켓1700)"}, {"name":"인텔(소켓1200)"}, {"name":"인텔(소켓1151v2)"}, {"name":"인텔(소켓2066)"},
+                {"name":"AMD(소켓AM4)"}, {"name":"AMD(소켓TR4)"}, {"name":"AMD(소켓sWRX8)"}, {"name":"AMD(소켓xTRX4)"},
+                {"name":"AMD(소켓SP3)"}, {"name":"인텔(소켓1151)"}, {"name":"인텔(소켓3647)"}, {"name":"인텔(소켓2011-V3)"},
+                {"name":"인텔(소켓2011)"}, {"name":"인텔(소켓1150)"}, {"name":"인텔(소켓1155)"}, {"name":"인텔(소켓1156)"},
+                {"name":"인텔(소켓775)"}, {"name":"인텔(CPU내장)"}, {"name":"AMD(AM3)"}, {"name":"AMD(소켓AM2+)"}
             ],
             [
-                {"title":"세부 칩셋"}
-
+                {"title":"세부 칩셋", "id":"chipset_detail"},
+                {"name":"(인텔) Z690"}, {"name":"(인텔) Z590"}, {"name":"(인텔) H570"}, {"name":"(인텔) B560"}, {"name":"(인텔) H510"}, 
+                {"name":"(AMD X570"}, {"name":"(AMD) B50"}, {"name":"(AMD) A520"}, {"name":"(AMD) B450"}, {"name":"(AMD) A320"}, 
+                {"name":"(AMD) WRX80"}, {"name":"(AMD) TRX40"}, {"name":"(AMD) X470"}, {"name":"(AMD) B350"}, {"name":"(AMD) X370"}, 
+                {"name":"(AMD) X399"}, {"name":"(인텔) Z490"}, {"name":"(인텔) H470"}, {"name":"(인텔) B460"}, {"name":"(인텔) H410"}, 
+                {"name":"(인텔) Q470E"}, {"name":"(인텔) W480"}, {"name":"(인텔) Z390"}, {"name":"(인텔) H370"}, {"name":"(인텔) B365"}, 
+                {"name":"(인텔) B360"}, {"name":"(인텔) H310"}, {"name":"(인텔) Q370"}, {"name":"(인텔) Z370"}, {"name":"(인텔) B250"}, 
+                {"name":"(인텔) H270"}, {"name":"(인텔) Z270"}, {"name":"(인텔) Z299"}, {"name":"(인텔) Z170"}, {"name":"(인텔) Q170"}, 
+                {"name":"(인텔) H170"}, {"name":"(인텔) B150"}, {"name":"(인텔) H110"}, {"name":"(인텔) X99"}, {"name":"(인텔) Z97"}, 
+                {"name":"(인텔) H97"}, {"name":"(인텔) Z87"}, {"name":"(인텔) H87"}, {"name":"(인텔) Q87"}, {"name":"(인텔) B85"}, 
+                {"name":"(인텔) H81"}, {"name":"(인텔) H77"}, {"name":"(인텔) B75"}, {"name":"(인텔) P67 (B3)"}, {"name":"(인텔) H67 (B3)"}, 
+                {"name":"(인텔) H61"}, {"name":"(인텔) H67"}, {"name":"(인텔) P55"}, {"name":"(인텔) H55"}, {"name":"(인텔) G41"}, 
+                {"name":"(인텔) Q35"}, {"name":"(인텔) G31"}, {"name":"(인텔) C622"}, {"name":"(인텔) C621"}, {"name":"(인텔) C612"}, 
+                {"name":"(인텔) C242"}, {"name":"(인텔) C246"}, {"name":"(인텔) C236"}, {"name":"(인텔) C232"}, {"name":"(인텔) C224"}
+            ],
+            [
+                {"title":"폼펙터", "id":"formfactor"}, 
+                {"name":"ATX (30.5x24.4cm)"}, {"name":"M-ATX (24.4x24.4cm)"}, {"name":"M-iTX (17.0x17.0cm)"},
+                {"name":"E-ATX (30.5x33.0cm)"}, {"name":"M-STX (14.0x14.7cm)"}
+            ],
+            [
+                {"title":"메모리 종류", "id":"memory_type"},
+                {"name":"DDR4"}, {"name":"DDR3"}, {"name":"DDR2"}, {"name":"DDR4 노트북용"}, {"name":"DDR3 노트북용"}
+            ]
+        ],
+        [
+            [
+                {"title":"제조사", "id":"manufacture"}, 
+                {"name":"삼성전자"}, {"name":"ADATA"}, {"name":"G.SKILL"}, {"name":"GeIL"}, {"name":"ESSENCORE"},
+                {"name":"TeamGroup"}, {"name":"HP"}, {"name":"ACPI"}, {"name":"AFOX"}, {"name":"ANACOMDA"},
+                {"name":"AVEXIR"}, {"name":"Antec"}, {"name":"Apacer"}, {"name":"ArchMemory"}, {"name":"CORSAIR"},
+                {"name":"CYNEX"}, {"name":"Dreamware"}, {"name":"EKMEMORY"}, {"name":"GIGABYTE"}, {"name":"GLOWAY"},
+                {"name":"GSMS"}, {"name":"INNO3D"}, {"name":"KINGMAX"}, {"name":"LANSON"}, {"name":"NEMIX RAM"},
+                {"name":"OCPC"}, {"name":"OLOy"}, {"name":"PATRIOT"}, {"name":"PNY"}, {"name":"SK하이닉스"},
+                {"name":"SOUTH BRIDGE"}, {"name":"Terabyte"}, {"name":"V-Color"}, {"name":"ZADAK"}, {"name":"brexy"},
+                {"name":"갤럭시"}, {"name":"건평정보통신"}, {"name":"디자인"}, {"name":"리뉴올PC"}, {"name":"마이크론"},
+                {"name":"실리콘파워"}, {"name":"써멀테이크"}, {"name":"앱코"}, {"name":"어드반"}, {"name":"에이서"},
+                {"name":"오존컴퍼니"}, {"name":"이메이션"}, {"name":"컴이지"}, {"name":"킹스톤"}, {"name":"타무즈"},
+                {"name":"트랜센드"}
+            ],
+            [
+                {"title":"사용 장치", "id":"device"},
+                {"name":"데스크탑용"}, {"name":"노트북용"}, {"name":"서버용"}
+            ],
+            [
+                {"title":"제품 분류", "id":"type"},
+                {"name":"DDR4"}, {"name":"DDR3"}, {"name":"DDR2"}
+            ],
+            [
+                {"title":"메모리 용량(GB)", "id":"capacity"},
+                {"name":"64"}, {"name":"32"}, {"name":"16"}, {"name":"8"}, {"name":"4"}, 
+                {"name":"128"}, {"name":"2"}, {"name":"1"}
+            ]
+        ],
+        [
+            [
+                {"title":"제조사", "id":"manufacture"},
+                {"name":"Seagate"}, {"name":"Western Digital"}, {"name":"도시바"}, {"name":"CENTURY"}, {"name":"DELL"}, 
+                {"name":"Fujitsu"}, {"name":"HGST"}, {"name":"HP"}, {"name":"IBM"}, {"name":"MAIWO"}, 
+                {"name":"MARSHAL"}, {"name":"Sebap"}, {"name":"Synology"}, {"name":"TerraMaster"}, {"name":"디지털존"}, 
+                {"name":"레노버"}, {"name":"삼성전자"}, {"name":"이지넷유비쿼터스"}, {"name":"크로바하이텍"}, {"name":"한국캐드컴"}
+            ],
+            [
+                {"title":"디스크 크기", "id":"size"},
+                {"name":"8.9cm(3.5인치)"}, {"name":"6.4cm(2.5인치)"}, {"name":"4.6cm(1.8인치)"}
+            ],
+            [
+                {"title":"디스크 용량(TB)", "id":"capacity"},
+                {"name":"8"}, {"name":"4"}, {"name":"3"}, {"name":"2"}, {"name":"1"}, 
+                {"name":"18"}, {"name":"16"}, {"name":"14"}, {"name":"12"}, {"name":"10"}, 
+                {"name":"6"}, {"name":"5"}, {"name":"1.5"}
             ]
         ]
     ]
