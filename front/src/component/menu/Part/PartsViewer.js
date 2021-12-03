@@ -3,19 +3,18 @@ import { useEffect, useState } from "react";
 import PartsSelector from "./PartsSelector";
 import ItemList from "./ItemList";
 import Paging from "../../Paging";
-//state 관리가 이상하게 꼬인듯...
 export default function PartsViewer() {
     
     const [page, setPage] = useState(1);
     const [list, setList] = useState([]);
     const [fList, setFList] = useState([]);
-
+    const [filter, setFilter] = useState([]);
+    const [isFilter, setIsFilter] = useState(false);
     useEffect(() => {
         axios
             .get(`/component/cpu/list`)
             .then((response) => {
                 setFList([...response.data]);
-                console.log(response.data.length)
                 setListByPage([...response.data])
             })
             .catch((e) => {
@@ -31,30 +30,56 @@ export default function PartsViewer() {
                 });
                 array = [...array, ...newList];
             });
-            setList([...array]);
+            setIsFilter(true)
+            setFilter([...array]);
+            let farray = [];
+            let start = (page - 1) * 10;
+            for (let i = start; i < start + 10; i++) {
+                    if(array[i]) {
+                        console.log(1)
+                        farray = [...farray, array[i]];
+                    }
+                        
+            }
+            setList([...farray]);
         } else {
-            setList([...fList]);
+            setIsFilter(false);
+            let array = [];
+            let start = (page - 1) * 10;
+            for (let i = start; i < start + 10; i++) {
+
+                array = [...array, fList[i]];
+            }
+            setList([...array]);
         }
     };
     const pageHandler = (pg) => {
         setPage(pg);
         let array = [];
         let start = (pg - 1) * 10;
+        console.log(isFilter)
         for (let i = start; i < start + 10; i++) {
-            if(fList[i])
-                array = [...array, fList[i]];
+            if(isFilter) 
+            {
+                if(filter[i]) {
+                    array = [...array, filter[i]];
+                }
+            }
+            else {
+                if(fList[i]) {
+                    array = [...array, fList[i]];
+                }
+            }
         }
         setList([...array]);
     };
     const setListByPage = (li) => {
-        console.log(page)
-        console.log(fList)
-        console.log(list)
-        console.log(li)
+        console.log(isFilter)
         let array = [];
         let start = (page - 1) * 10;
         for (let i = start; i < start + 10; i++) {
-            array = [...array, li[i]];
+            if(li[i])
+                array = [...array, li[i]];
         }
         setList([...array]);
     };
@@ -78,7 +103,7 @@ export default function PartsViewer() {
                 getItemsByOption={getItemsByOption}
             />
             <ItemList list={list} />
-            <Paging page={page} count={fList.length} pageHandler={pageHandler}/>
+            <Paging page={page} count={isFilter ? filter.length : fList.length} pageHandler={pageHandler}/>
         </div>
     );
 }
