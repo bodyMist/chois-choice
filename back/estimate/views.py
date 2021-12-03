@@ -11,18 +11,21 @@ import re
 
 # 용도와 예산을 추출
 # 용도 모든 사양들을 비교하여 최고치의 최소사양과 권장사양을 얻음(이게 기준/시작점이 될 것)
+# 시작점에서는 cpu, gpu, memory만 있으므로 용도별?로 Hdd/Ssd, mainboard, cooler, case를 선택
+# 예)인터넷 서핑용 - Hdd250GB, Ssd 128gb 이상, mainboard는 cpu 소켓에 맞춰서 
 # 
 class Recommendation(APIView):
   
   def get(self, request, format=None):
-    uses_name = request.GET.getlist['uses']    # 용도는 다수 입력이 가능(이름만 넘어옴)
+    uses_name = request.GET.getlist['uses']     # 용도는 다수 입력이 가능(이름만 넘어옴)
     budget = request.GET.get['budget']
+    current_price = 0                           # 현재 견적에서의 총 가격
     use_list = []
     for use in uses_name:
       target = Uses.objects.filter(name = use)  # 용도 이름으로 각각 용도 객체 검색
-      use_list.append(target)                   # 리스트에 추가
-    max_spec = self.getMaxUse(use_list)         # 용도 리스트에 대해 최고 사양 구하기
-
+      use_list.append(target)                   # 용도 리스트에 추가
+    max_spec = self.getMaxUse(use_list)         # 용도 리스트에 대해 최고치 사양 구하기
+    
 
 
   # 입력인자 : 부품명
@@ -38,50 +41,54 @@ class Recommendation(APIView):
 
 
   # 입력인자 : 비교할 용도 리스트
-  # 출릭인자 : 비교,계산,대입이 끝난 용도 객체 하나
+  # 출릭인자 : 비교,계산,대입이 끝난 용도 객체 하나, 
+  #           해당 객체에 대한 각 {벤치마크 점수와 가격 정보}로 이루어진 리스트
+  #           ex) [Uses 객체, 최소cpu 점수 dict, 최소gpu 점수 dict, ...]
   # 기본적으로 벤치마크 점수 기반으로 비교
   # 한쪽이라도 벤치마크 점수가 없을 경우 가격 정보로 비교
   def getMaxUse(self, uses):
-    use = uses[0]
-    
-    for i in range(1, len(uses)):
-      use = self.compareUses(use, uses[i])
-    return use
-  
-  # 왼쪽 용도의 사양을 기준으로 오른쪽 사양을 비교하고 높으면 왼쪽에 대입
-  # 비교는 벤치마크로 진행
-  # 벤치마크 점수가 없는 경우? 부품의 가격으로 비교
-  # left가 NULL 인 경우 right를 덮어씌우고, right가 NULL인 경우 넘어가기
-  def compareUses(self, left, right):
-    # left와 right에 대해서 cpu/gpu/memory 사양에 대해서 benchmark와 price 가져오기
-    # 권장사양이 없을 수 있는 용도들에 대해서 Null일 경우 0으로 값 대체
+    standard_use = uses[0]
     zero_dictionary = {'benchmark':0, 'price':0}
-    llp = self.getCpuScores(left.least_processor)
-    llg = left.least_graphic
-    llm = left.least_memory
-    
-    rlp = self.getCpuScores(right.least_processor)
-    rlg = right.least_graphic
-    rlm = right.least_memory
+    # 1번 용도에 대해 benchmark와 가격 얻기
+    # 최소사양
+    llp = self.getCpuScores(standard_use.least_processor)
+    llg = standard_use.least_graphic
+    llm = standard_use.least_memory
+    # 권장사양
+    # 있다면 점수를 계산하지만, 없다면 0점 dictionary 할당
+    lrp = self.getCpuScores(standard_use.rec_processor) \
+       if standard_use.rec_processor is not None else zero_dictionary
+    lrg = standard_use.rec_graphic if standard_use.rec_graphic is not None else zero_dictionary
+    lrm = standard_use.rec_memory if standard_use.rec_memory is not None else zero_dictionary
 
-    lrp = self.getCpuScores(left.rec_processor) \
-       if left.rec_processor is not None else zero_dictionary
-    lrg = left.rec_graphic if left.rec_graphic is not None else zero_dictionary
-    lrm = left.rec_memory if left.rec_memory is not None else zero_dictionary
+    for i in range(1, len(uses)):
+      # 비교대상이 될 용도들에 대해서 benchmark와 가격 계산
+      rlp = self.getCpuScores(uses[i].least_processor)
+      rlg = uses[i].least_graphic
+      rlm = uses[i].least_memory
+      rrp = self.getCpuScores(uses[i].rec_processor) \
+       if standard_use.rec_processor is not None else zero_dictionary
+      rrg = uses[i].rec_graphic if uses[i].rec_graphic is not None else zero_dictionary
+      rrm = uses[i].rec_memory if uses[i].rec_memory is not None else zero_dictionary
 
-    rrp = self.getCpuScores(right.rec_processor) \
-       if left.rec_processor is not None else zero_dictionary
-    rrg = right.rec_graphic if right.rec_graphic is not None else zero_dictionary
-    rrm = right.rec_memory if right.rec_memory is not None else zero_dictionary
+      # 계산 후 대조군과 비교 대입하기
+      # 최소 사양
+      if llp['benchmark'] < rlp['benchmark']:
+        standard_use.least_processor = uses[i].least_processor
+      if llg['benchmark'] < rlg['benchmark']:
+        standard_use.least_graphic = uses[i].least_graphic
+      if llm['benchmark'] < rlm['benchmark']:
+        standard_use.least_memory = uses[i].least_memory
+      # 권장 사양
+      if lrp['benchmark'] < rrp['benchmark']:
+        standard_use.rec_processor = uses[i].rec_processor
+      if lrg['benchmark'] < rrg['benchmark']:
+        standard_use.rec_graphic = uses[i].rec_graphic
+      if lrm['benchmark'] < rrm['benchmark']:
+        standard_use.rec_memory = uses[i].rec_memory
+    result = [standard_use, llp, llg, llm, lrp, lrg, lrm]
+    return result
 
-    llp = self.compareScore(llp, rlp)
-    llg = self.compareScore(llg, rlg)
-    llm = self.compareScore(llm, rlm)
-
-    llp = rlp if llp['benchmark'] < rlp['benchmark'] else llp
-    llg = rlg if llg['benchmark'] < rlg['benchmark'] else llg
-    llm = rlm if llm['benchmark'] < rlm['benchmark'] else llm
-    return left
 
   # 용도 || 부품 의 벤치마크, 가격 정보 비교
   def compareScore(self, left, right):
@@ -90,6 +97,7 @@ class Recommendation(APIView):
     else:
       left = right if left['benchmark'] < right['benchmark'] else left
     return left
+
 
   #====================CPU BenchMark 점수 가져오기 ↓==================================
   cpu_mapping_before = ['코어','제온','펜티엄','셀러론','애슬론','페넘','스레드리퍼','쿼드','라이젠']
