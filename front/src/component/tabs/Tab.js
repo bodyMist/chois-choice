@@ -50,6 +50,7 @@ export default function ButtonAppBar() {
                                         button
                                         component={Link}
                                         to={`/${menu.id}`}
+                                        key={menu.id}
                                     >
                                         <ListItemIcon>
                                             {index % 2 === 0 ? (
