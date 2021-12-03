@@ -2,7 +2,7 @@ from rest_framework.views   import APIView
 from rest_framework.response import Response
 # from .serializer import *
 from .models import *
-from ..component import models as component
+from component import models as component
 
 #문자열 파싱용
 import re 
@@ -27,18 +27,7 @@ class Recommendation(APIView):
     max_spec = self.getMaxUse(use_list)         # 용도 리스트에 대해 최고치 사양 구하기
     
 
-
-  # 입력인자 : 부품명
-  # 출력인자 : 입력인자에 대한 가격
-  # 부품명을 포함하는 NAME을 가진 부품, price null 제외, 오름차순으로 정렬 후 1번째 반환
-  def getComponentPrice(self, component_name):
-    try:
-      price = component.Component.objects.filter(name__icontains=component_name) \
-      .only("price").exclude(price__isnull=True).order_by('price')
-    except:
-      price = 0   # 가격 정보가 없을 경우 0을 기입
-    return price
-
+    
 
   # 입력인자 : 비교할 용도 리스트
   # 출릭인자 : 비교,계산,대입이 끝난 용도 객체 하나, 
@@ -46,29 +35,33 @@ class Recommendation(APIView):
   #           ex) [Uses 객체, 최소cpu 점수 dict, 최소gpu 점수 dict, ...]
   # 기본적으로 벤치마크 점수 기반으로 비교
   # 한쪽이라도 벤치마크 점수가 없을 경우 가격 정보로 비교
+  # Memory의 경우 Uses에서 단순 capacity만 기입되어 있으므로
+  # 요구사항 만족하는 memory 중 가격이 가장 낮은 데스크탑용 memory를 선택 
   def getMaxUse(self, uses):
     standard_use = uses[0]
     zero_dictionary = {'benchmark':0, 'price':0}
     # 1번 용도에 대해 benchmark와 가격 얻기
     # 최소사양
     llp = self.getCpuScores(standard_use.least_processor)
-    llg = standard_use.least_graphic
-    llm = standard_use.least_memory
+    llg = self.getGpuScores(standard_use.least_graphic)
+    llm = self.getMemoryWithUse(standard_use.least_memory.replace("GB", ""))
     # 권장사양
     # 있다면 점수를 계산하지만, 없다면 0점 dictionary 할당
     lrp = self.getCpuScores(standard_use.rec_processor) \
        if standard_use.rec_processor is not None else zero_dictionary
-    lrg = standard_use.rec_graphic if standard_use.rec_graphic is not None else zero_dictionary
+    lrg = self.getGpuScores(standard_use.rec_graphic) \
+     if standard_use.rec_graphic is not None else zero_dictionary
     lrm = standard_use.rec_memory if standard_use.rec_memory is not None else zero_dictionary
 
     for i in range(1, len(uses)):
       # 비교대상이 될 용도들에 대해서 benchmark와 가격 계산
       rlp = self.getCpuScores(uses[i].least_processor)
-      rlg = uses[i].least_graphic
+      rlg = self.getGpuScores(uses[i].least_graphic)
       rlm = uses[i].least_memory
       rrp = self.getCpuScores(uses[i].rec_processor) \
-       if standard_use.rec_processor is not None else zero_dictionary
-      rrg = uses[i].rec_graphic if uses[i].rec_graphic is not None else zero_dictionary
+        if standard_use.rec_processor is not None else zero_dictionary
+      rrg = self.getGpuScores(uses[i].rec_graphic) \
+        if uses[i].rec_graphic is not None else zero_dictionary
       rrm = uses[i].rec_memory if uses[i].rec_memory is not None else zero_dictionary
 
       # 계산 후 대조군과 비교 대입하기
@@ -98,6 +91,17 @@ class Recommendation(APIView):
       left = right if left['benchmark'] < right['benchmark'] else left
     return left
 
+
+  # 입력인자 : 부품명
+  # 출력인자 : 입력인자에 대한 가격
+  # 부품명을 포함하는 NAME을 가진 부품, price null 제외, 오름차순으로 정렬 후 1번째 반환
+  def getComponentPrice(self, component_name):
+    try:
+      price = component.Component.objects.filter(name__icontains=component_name) \
+      .only("price").exclude(price__isnull=True).order_by('price')
+    except:
+      price = 0   # 가격 정보가 없을 경우 0을 기입
+    return price
 
   #====================CPU BenchMark 점수 가져오기 ↓==================================
   cpu_mapping_before = ['코어','제온','펜티엄','셀러론','애슬론','페넘','스레드리퍼','쿼드','라이젠']
@@ -136,7 +140,7 @@ class Recommendation(APIView):
   # 출력인자 : 해당되는 cpu component
   def getCpuWithUse(self, cpu_split):
     result = component.Component.objects.filter(data_type=1, 
-    name__icontains=cpu_split[0], name__icontains=cpu_split[1]).order_by('price')
+    name__icontains=cpu_split[0]).filter(name__icontains=cpu_split[1]).order_by('price')
     return result
 
 
@@ -186,11 +190,13 @@ class Recommendation(APIView):
   # 용도 테이블에서는 특정 제품명이나 capacity을 기입 -> capacity로는 검색 불가
   # capacity로 기입되어 있을 경우, component에서 name으로 검색 -> 그 중에서
 
-  def getComparableScores(self, row_name):
+  def getGpuScores(self, row_name):
     mapped_name = self.gpuMapping(row_name)
     parsed_name = self.gpuParse(mapped_name)
     benchmark = self.getGpuBenchmark(parsed_name)
     price = self.getComponentPrice(row_name)
+    result = {'benchmark':benchmark, 'price':price}
+    return result
 
   # super->s , ti -> -ti, xt -> -XT
   # 입력인자 : DB의 Component(data_type=2) 또는 Uses GPU name(graphics)
@@ -237,12 +243,31 @@ class Recommendation(APIView):
   #====================MEMORY BenchMark 점수 가져오기 ↓=============================
   # Memory는 시리즈명(Trident, Fury, Vengeance 등) + 클럭(3200) + 용량(2x8G) 정보로 검색 가능
   # Memory BenchMark 데이터가 굉장히 적음(약 100개)
-  # 
+  # Uses에서는
+ 
+  #==================Uses memory 요구사항으로 BenchMark 점수 가져오기================
+  # 용량만 기입되어있는 용도-메모리를 최저금액 제품을 Component에서 하나 가져오기
+  def getMemoryWithUse(self, use_capacity):
+    result = component.Component.objects.select_related('memory')\
+      .filter(data_type=4, memory__capacity__gt=use_capacity)\
+      .exclude(price__isnull=True).order_by('price')
+
+    return result
+
+  #====================Component name으로 BenchMark 점수 가져오기 ==================
   memory_series = ['Vengeance', 'Trident', 'Ripjaws', 'Dominator', 'Ballistix', 'Predator']
 
+
+  def getMemoryScores(self, row_name):
+    parsed_name = self.memoryParse(row_name)
+    benchmark = self.getMemoryBenchmark(parsed_name)
+    price = self.getComponentPrice(row_name)
+    result = {'benchmark': benchmark, 'price':price}
+    return result
+
   # 입력인자 : DB Component memory name
-  # 출력인자 : 
-  def gpuParse(self, row_name):
+  # 출력인자 : [DDR, 클럭 , 용량(GB), 시리즈명(공백가능)]
+  def memoryParse(self, row_name):
     row_name.replace("-", " ")    # DDR 세대와 클럭 사이의 '-' 하이픈 제거
     bracket = re.findall('\(\d+GB\)', row_name) # memory name에서 제품의 총 capacity 추출 / 단일 갯수 제품일때
     multi_bracket = re.findall('\(\d+Gx.+\)', row_name)  # memory name에서 16Gx2 이런거 추출  / 2개 이상 갯수일때
@@ -270,9 +295,9 @@ class Recommendation(APIView):
   # 입력인자 : parsing 완료된 memory name 토큰 리스트
   # 출력인자 : 내림차순으로 정렬되어 가장 높은 벤치마크 점수
   def getMemoryBenchmark(self, parsed_name):
-    benchmark_list= BenchMark.objects.filter(name__icontains=parsed_name[0],
-    name__icontains=parsed_name[1], name__icontains=parsed_name[2], 
-    name__icontains=parsed_name[3]).order_by('-score')
+    benchmark_list= BenchMark.objects.filter(name__icontains=parsed_name[0])\
+    .filter(name__icontains=parsed_name[1]).filter(name__icontains=parsed_name[2])\
+    .filter(name__icontains=parsed_name[3]).order_by('-score')
 
     if len(benchmark_list) == 0:
       return 0
