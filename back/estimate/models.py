@@ -36,7 +36,7 @@ class Evaluations(models.Model):
 
 
 class Annotations(models.Model):
-    annotation_id = models.IntegerField(primary_key=True)
+    annotation_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20)
     explain = models.TextField()
 
@@ -52,10 +52,10 @@ class Uses(models.Model):
     name = models.CharField(max_length=40, blank=True, null=True)
     least_processor = models.CharField(max_length=100, blank=True, null=True)
     least_graphics = models.CharField(max_length=100, blank=True, null=True)
-    least_memory = models.CharField(max_length=30, blank=True, null=True)
+    least_memory = models.IntegerField(blank=True, null=True)
     rec_processor = models.CharField(max_length=100, blank=True, null=True)
     rec_graphics = models.CharField(max_length=100, blank=True, null=True)
-    rec_memory = models.CharField(max_length=30, blank=True, null=True)
+    rec_memory = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -65,6 +65,7 @@ class BenchMark(models.Model):
     benchmark_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100, blank=False, null=False)
     score = models.FloatField(blank=False, null=False)
+    data_type = models.IntegerField(blank=False, null=False, default=0)
 
     class Meta:
         managed = True
