@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('member/', include('member.urls')),
     path('component', include('component.urls')),
+    path('estimate/', include('estimate.urls')),
 ]
