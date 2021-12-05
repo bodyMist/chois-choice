@@ -17,6 +17,11 @@ ul.pagination li {
   align-items: center; 
   font-size: 1rem; 
 } 
+@media (max-width:600px) {
+  ul.pagination li {
+    width: 20px;
+  }
+}
 ul.pagination li:first-child { 
   border-radius: 5px 0 0 5px; 
 } 
@@ -27,6 +32,7 @@ ul.pagination li a {
   text-decoration: none; 
   color: #337ab7; 
   font-size: 1rem; 
+  background-color: transparent;
 }
 ul.pagination li.active a { 
   color: white; 
