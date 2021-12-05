@@ -7,6 +7,8 @@ import { useEffect } from "react";
 
 export default function PcEstimate() {
   const [list, setList] = useState([]);
+  const [fList, setFList] = useState([]);
+  const [page, setPage] = useState(1);
   const [sList, setSlist] = useState([
     { id: 1, name: "미선택" },
     { id: 2, name: "미선택" },
@@ -22,13 +24,38 @@ export default function PcEstimate() {
     axios
       .get(`/component?id=1`)
       .then((response) => {
-        setList(response.data);
+        setFList(response.data);
+        setListByPage([...response.data]);
         console.log(response.data)
       })
       .catch((e) => {
         console.error(e);
       });
   }, []);
+
+
+  const pageHandler = (pg) => {
+    console.log(pg)
+    setPage(pg);
+    let array = [];
+    let start = (pg - 1) * 10;
+    for (let i = start; i < start + 10; i++) {
+      if(fList[i])
+      array = [...array, fList[i]];
+    }
+    setList([...array]);
+  };
+
+  const setListByPage = (li) => {
+    let array = [];
+    let start = (page - 1) * 10;
+    for (let i = start; i < start + 10; i++) {
+        if(li[i])
+            array = [...array, li[i]];
+    }
+    setList([...array]);
+};
+
   const getPartInf = (id) => {
     axios
       .get(`/component`, { params: { id } })
@@ -60,7 +87,8 @@ export default function PcEstimate() {
       });
   }
 
-  const searchPart = (word) => {
+  const searchPart = () => {
+    const word = document.querySelector(".form-control").value;
     const data_type = list[0].data_type;
     axios
       .get(`/component`, {
@@ -82,15 +110,57 @@ export default function PcEstimate() {
         console.log(error);
       });
   }
-
+  const onKeyPress = (e) => {
+    if(e.key==='Enter') {
+      searchPart()
+    }
+  }
+  const none = {
+    display: "none",
+  }
   return (
-    <div className="container">
-      {/* <h3>PC 견적</h3> */}
-      <Link to="/PcRecommand">견적 추천</Link>
-      <div className="container-pc">
-        <PartSelect list={list} selectPart={selectPart} searchPart={searchPart} resetPart={resetPart} />
-        <PartSelected getPartInf={getPartInf} sList={sList} />
+      <div className="container">
+          {/* <h3>PC 견적</h3> */}
+          <Link to="/PcRecommand">견적 추천</Link>
+          <div className="container-pc">
+              <div className="searchInputArea">
+                  <form className="input-group" onKeyPress={onKeyPress}>
+                      <input
+                          type="text"
+                          className="form-control"
+                          placeholder="부품 명 검색"
+                      ></input>
+                      <input type="text" style={none} />
+                      <div className="input-group-btn">
+                          <button
+                              className="btn btn-default"
+                              type="button"
+                              onClick={searchPart}
+                              id="search"
+                          >
+                              검색
+                          </button>
+                          <button
+                              className="btn btn-default"
+                              type="reset"
+                              onClick={resetPart}
+                          >
+                              초기화
+                          </button>
+                      </div>
+                  </form>
+              </div>
+              <PartSelect
+                  list={list}
+                  selectPart={selectPart}
+                  page={page}
+                  pageHandler={pageHandler}
+                  count={fList.length}
+              />
+              <PartSelected getPartInf={getPartInf} sList={sList} />
+              
+          </div>
+          
       </div>
-    </div>
   );
 }

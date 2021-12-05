@@ -24,6 +24,7 @@ export default function ButtonAppBar() {
     const toggleDrawer = (open) => {
         setState(open);
     };
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -39,18 +40,23 @@ export default function ButtonAppBar() {
                     </IconButton>
                     <Drawer open={state} onClose={() => toggleDrawer(false)}>
                         <Box
-                            sx={{ width: 250 }}
+                            sx={{ width: {
+                                xs:500,
+                                sm:250,
+                            }, }}
                             rolse="presentation"
                             onClick={() => toggleDrawer(false)}
                             onKeyDown={() => toggleDrawer(false)}
                         >
                             <List>
+                            <button type="button" className="close_btn" onClose={() => toggleDrawer(false)}>닫기</button>
                                 {dummy.menus.map((menu, index) => (
                                     <ListItem
                                         button
                                         component={Link}
                                         to={`/${menu.id}`}
                                         key={menu.id}
+                                        tabindex={index}
                                     >
                                         <ListItemIcon>
                                             {index % 2 === 0 ? (
@@ -62,6 +68,7 @@ export default function ButtonAppBar() {
                                         <ListItemText>{menu.menu}</ListItemText>
                                     </ListItem>
                                 ))}
+                                
                             </List>
                         </Box>
                     </Drawer>
