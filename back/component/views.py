@@ -1,11 +1,14 @@
 from rest_framework.views   import APIView
 from rest_framework.response import Response
+from django.core.cache import cache
 from .serializer import *
 from .models import *
+import time
 
 # Create your views here.
 class ComponentView(APIView):
     def get(self, request, format=None):
+        start = time.time()
         type = request.GET['id']
         try:
             word = request.GET['word']
@@ -13,13 +16,16 @@ class ComponentView(APIView):
         except:
             queryset = Component.objects.filter(data_type=type)
         serializer = ComponentSerializer(queryset, many=True)
+        print("걸린 시간 : ", time.time() - start)
         return Response(serializer.data)
 
 class CpuListView(APIView):
     def get(self, request, format=None):
+        start = time.time()
         #queryset = Cpu.objects.all().only("basic_clock", "max_clock", "socket", "generation")
-        queryset = Cpu.objects.all()
+        queryset = cache.get_or_set('cpu_list',Cpu.objects.all()) 
         serializer = CpuListSerializer(queryset, many=True)
+        print("걸린 시간 : ", time.time() - start)
         return Response(serializer.data)
 
 class CpuDetailView(APIView):

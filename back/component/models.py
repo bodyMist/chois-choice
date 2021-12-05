@@ -176,7 +176,7 @@ class Case(models.Model):
     width = models.IntegerField(blank=True, null=True)
     depth = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
-    component_componenet = models.OneToOneField('Component', on_delete=models.CASCADE, primary_key=True)
+    component_component = models.OneToOneField('Component', on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         managed = True
