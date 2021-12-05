@@ -80,7 +80,7 @@ export default function PcEstimate() {
     axios
       .get(`/component`, { params: { id } })
       .then((response) => {
-        setList(response.data);
+        setFList(response.data);
       })
       .catch((e) => {
         console.error(e);
@@ -103,7 +103,7 @@ export default function PcEstimate() {
           alert("검색 결과가 없습니다.")
         }
         else {
-          setList(response.data)
+          setFList(response.data)
         }
       })
       .catch(function (error) {
