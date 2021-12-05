@@ -6,6 +6,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+::-webkit-scrollbar {
+  display: none;
+}
+html {
+  font-size: 14px;
+}
 
 /* *{
   box-sizing: content-box;
@@ -49,7 +55,9 @@ a {
 .App {
   display: flex;
   flex-direction: column;
-  width: 848px;
+  width: 100%;
+  max-width: 840px;
+  min-width: 330px;
   margin: 0 auto;
 }
 
@@ -158,7 +166,7 @@ table td {
   margin-left: 9px !important;
   display: block;
   margin-top: 1px;
-  font-size: 12px;
+  font-size: 0.85714rem;
   line-height: 1.5;
   color: #555;
 }
@@ -201,7 +209,7 @@ em {
 }
 
 .text-field {
-  font-size: 14px;
+  font-size: 1rem;
   padding: 10px;
   border: none;
   width: 260px;
@@ -209,7 +217,7 @@ em {
 }
 
 .submit-btn {
-  font-size: 14px;
+  font-size: 1rem;
   border: none;
   padding: 10px;
   background-color: #1BBC9B;
@@ -220,7 +228,7 @@ em {
 .submit-form{
   display : flex;
   flex-direction: column;
-  font-size: 14px;
+  font-size: 1rem;
   border: none;
   padding: 10px;
   width: 280px;
@@ -236,7 +244,10 @@ em {
 .container-pc {
   display: flex;
   flex-direction: row;
-  width: 800px;
+  flex-wrap:wrap;
+  width: 100%;
+  max-width: 840px;
+  height: 100%;
   padding-right: 15px;
   padding-left: 15px;
   margin-right: auto;
@@ -252,9 +263,16 @@ em {
   margin-right: -15px;
   margin-left: -15px;
 }
+@media (max-width:600px) {
+  .container-partSelect {
+    padding-right: 5px;
+    padding-left: 15px;
+  }
+}
 
 .parts {
   float: left;
+  width: 100%;
   padding-left: 0px;
   padding-right: 0px;
 }
@@ -269,6 +287,13 @@ em {
 .searchInputArea {
   position: relative;
   min-height: 1px;
+  max-height:40px;
+  width:56%;
+}
+@media (max-width: 600px) {
+  .searchInputArea {
+    width:98.5%;
+  }
 }
 .input-group-pc {
   display: flex;
@@ -292,15 +317,17 @@ em {
   z-index: 2;
   float: left;
   width: 100%;
+  max-width: 840px;
   margin-bottom: 0;
 }
 
 .form-control {
   display: table-cell;
   width: 100%;
+  max-width: 840px;
   height: 34px;
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: 1rem;
   color: #555;
   background-color: #fff;
   background-image: none;
@@ -330,7 +357,7 @@ em {
   /* display: inline-block; */
   padding: 6px 12px;
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: normal;
   text-align: center;
   vertical-align: middle;
@@ -386,7 +413,7 @@ button {
   min-height: 1px;
   padding: 5px;
   margin-top:0px;
-  font-size: 14px;
+  font-size: 1rem;
   white-space: normal;
   /* text-align: left; */
 }
@@ -413,7 +440,7 @@ button {
   padding: 5px;
   margin-top: 0;
   margin-bottom: 1.5rem;
-  font-size: 14px;
+  font-size: 1rem;
   white-space: normal;
   text-align: left;
 }
@@ -425,7 +452,7 @@ button {
   min-height: 1px;
   padding: 5px;
   margin-top: 1.7em;
-  font-size: 14px;
+  font-size: 1rem;
   white-space: normal;
   text-align: left;
 }
@@ -461,6 +488,12 @@ button {
   width: 40%;
   background-color : #f0f0f0;
   margin-left:1.6em;
+  margin-top:-35px;
+}
+@media (max-width:600px) {
+  .MainSufferArear {
+    margin-top: 0;
+  }
 }
 
 .second {
@@ -475,7 +508,7 @@ button {
 }
 
 .dir_location {
-  font-size: 12px;
+  font-size: 0.85714rem;
   line-height: 15px;
   color: #333;
   height: 50px;
@@ -512,7 +545,7 @@ button {
 }
 
 .dir_loaction select {
-  font-size: 12px;
+  font-size: 0.85714rem;
   margin-top: -1px;
   height: 20px;
 }
@@ -526,7 +559,7 @@ button {
 
 .optional_nav {
   border: 1px solid #b3b3b3;
-  font-size: 12px;
+  font-size: 0.85714rem;
   line-height: 16px;
   margin-bottom: 20px;
 }
@@ -546,7 +579,7 @@ button {
   padding: 1px 0;
   display: inline-block;
   vertical-align: top;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: bold;
   font-family: "Malgun Gothic",Dotum,"돋움","Apple SD Gothic Neo",Helvetica,Sans-serif;
 }
@@ -599,7 +632,7 @@ button {
   text-indent: -16px;
   vertical-align: top;
   word-break: break-all;
-  font-size: 11px;
+  font-size: 0.78571rem;
   cursor: default;
 }
 
@@ -617,11 +650,11 @@ button {
   list-style: none;
   text-align: left;
 }
-
+/* 반응형 */
 .spec_opt_view {
   position: absolute;
   top: 24px;
-  left: 595px;
+  left: 80%;
   width: 104px;
   height: 24px;
   padding-right: 16px;
@@ -631,7 +664,7 @@ button {
 }
 
 .btn_spec_view {
-  font-size: 11px;
+  font-size: 0.78571rem;
   padding: 0 16px 0 0;
   margin: 0;
   border: none;
@@ -667,7 +700,7 @@ button {
 
 .prod_price_selector .btn_search {
   border: 1px solid #666;
-  font-size: 11px;
+  font-size: 0.78571rem;
   color: #333;
   font-weight: bold;
   line-height: 23px;
@@ -746,7 +779,7 @@ button {
 .main_prodlist .pop_rank {
   display: inline-block;
   vertical-align: top;
-  font-size: 11px;
+  font-size: 0.78571rem;
   color: #fff;
   background: #8a8a8a;
   text-align: center;
@@ -775,7 +808,7 @@ button {
   display: inline;
   font-weight: bold;
   color: #000;
-  font-size: 15px;
+  font-size: 1.07142rem;
   line-height: 22px;
   margin-right: 6px;
   vertical-align: top;
@@ -787,7 +820,7 @@ button {
 }
 
 .prod_spec_set {
-  font-size: 11px;
+  font-size: 0.78571rem;
   color: #666;
   line-height: 17px;
   margin: 0;
@@ -796,14 +829,14 @@ button {
 .spec_list {
   margin: 0;
   padding: 0;
-  font-size: 11px;
+  font-size: 0.78571rem;
 }
 
 .prod_spec_set .spec_item {
   display: inline-block;
   background: url(http://img.danawa.com/new/goods_list/v1/img/icon_list_dot.png) no-repeat scroll 100% -947px;
   padding-right: 8px;
-  font-size: 11px;
+  font-size: 0.78571rem;
   line-height: 17px;
   color: #666;
 }
@@ -815,8 +848,31 @@ button {
 
 .scroll_box {
   border-top:1px solid #b1b4bd;
-  height: 400px;
+  height: 500px;
   clear: both;
   overflow-x:hidden;
   overflow-y:scroll;
+  
 }
+.close_btn {
+  display: none;
+}
+@media (max-width:600px) {
+  .close_btn {
+    display: block;
+    background-color: #fff;
+    white-space: unset;
+    font-size: 1rem;
+    text-align: center;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 0;
+    margin-left:3%;
+  }
+}
+@media (max-width:600px) {
+  .MuiButtonBase-root:nth-child(3) {
+    display: none;
+  }
+}
+

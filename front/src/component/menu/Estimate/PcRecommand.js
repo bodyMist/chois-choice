@@ -7,15 +7,17 @@ import Detail from "./Detail"
 
 const InputGroupPc = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     white-space: nowrap;
     vertical-align: middle;
     border-collapse: separate;
-    align-items: center;
+    align-content: center;
+    justify-content:center;
 `;
 const FormControl = styled.input`
     position: relative;
-    width: 500px;
+    width: 100%;
+    max-width: 300px;
 `;
 
 const SubmitBtn = styled.button`
@@ -36,34 +38,39 @@ const SubmitBtn = styled.button`
     border-radius: 0;
 `;
 const List = styled.li`
-display: inline-block;
+// display: inline-block;
+`
+const Container = styled.div `
+display:flex;
+flex-direction:column;
+align-items: center;
 `
 export default function PcRecommand() {
     console.log(list.purpose)
     const [detail, setDetail] = useState([])
     const checkedHandler = (e) => {
-        const id = e.target.id
-        const checkboxes = document.getElementsByName("type");
-        checkboxes.forEach((cb)=>{
-            cb.checked=false;
-        })
-        e.target.checked = true;
-        if(id!=3) {
-            const sdetail = list.purpose[id-1]
-            setDetail([...sdetail])
+        if (!e.target.check) {
+            const id = e.target.id;
+            const checkboxes = document.getElementsByName("type");
+            checkboxes.forEach((cb) => {
+                cb.checked = false;
+            });
+            e.target.checked = true;
+            if (id != 3) {
+                const sdetail = list.purpose[id - 1];
+                setDetail([...sdetail]);
+            }
         }
-        console.log(e.checked)
-        console.log(detail)
     }
     return (
         <div className="container">
             <Link to="/Estimate">견적 작성</Link>
-
-            <InputGroupPc>
-                <FormControl
+            <Container > 
+            <FormControl
                     type="text"
                     placeholder="예산 입력(원)"
                 ></FormControl>
+            <InputGroupPc>
                 <ul>
                 {list.menus.map((item)=>{
                     return (
@@ -78,7 +85,6 @@ export default function PcRecommand() {
                         </List>
                     );
                 })}
-                
                 </ul>
                 <ul>
                 {detail.map((item)=>(
@@ -87,8 +93,9 @@ export default function PcRecommand() {
                     </List>
                 ))}
                 </ul>
-                <SubmitBtn>제출</SubmitBtn>
             </InputGroupPc>
+            <SubmitBtn>제출</SubmitBtn>
+            </Container>
             <div className="text-center">
                 <h5>결과</h5>
                 <span></span>

@@ -57,7 +57,6 @@ export default function PartsViewer() {
         setPage(pg);
         let array = [];
         let start = (pg - 1) * 10;
-        console.log(isFilter)
         for (let i = start; i < start + 10; i++) {
             if(isFilter) 
             {

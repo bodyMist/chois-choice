@@ -3,10 +3,6 @@ import Pagination from "react-js-pagination";
 import "./Paging.css"
 
 export default function Paging({page, count, pageHandler}) {
-  // const [page, setPage] = useState(1);
-
-
-
   return (
     <Pagination 
     activePage={page}
