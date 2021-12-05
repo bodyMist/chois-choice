@@ -60,8 +60,8 @@ export default function PcEstimate() {
     axios
       .get(`/component`, { params: { id } })
       .then((response) => {
-        setList(response.data);
-        
+        setFList(response.data);
+        setListByPage(response.data)
       })
       .catch((e) => {
         console.error(e);
