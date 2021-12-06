@@ -22,9 +22,10 @@ class Recommendation(APIView):
   
   def get(self, request, format=None):
     start = time.time()
-    uses_name = request.GET.getlist('uses')     # 용도는 다수 입력이 가능(이름만 넘어옴)
+    uses_name = request.GET.getlist('uses[]')     # 용도는 다수 입력이 가능(이름만 넘어옴)
     budget = request.GET.get('budget')
     redis_key = "uses_" + ''.join(uses_name) + "_" + "budget_" + budget
+    # redis_key 수정할 것
     value = cache.get(redis_key)
 
     if value is not None:
@@ -37,8 +38,11 @@ class Recommendation(APIView):
     for use in uses_name:
       target = Uses.objects.get(name = use)  # 용도 이름으로 각각 용도 객체 검색
       use_list.append(target)                   # 용도 리스트에 추가
-    
+
     basic_spec = self.getMaxUse(use_list)       # 용도 리스트에 대해 최고치 사양 구하기
+
+    # 용도의 사양 조건을 통해 cpu,gpu,memory 기준점을 가져온다
+    # cpu,gpu,memory를 기준으로 다른 부품들을 추가한다
     try:
       least_spec= [basic_spec[0].least_processor, basic_spec[0].least_graphics, basic_spec[0].least_memory]
       least_spec.extend(self.getBasicComponents(least_spec[0], least_spec[1], least_spec[2]))
@@ -46,21 +50,24 @@ class Recommendation(APIView):
       rec_spec.extend(self.getBasicComponents(rec_spec[0], least_spec[1], least_spec[2]))
     except:
       pass
-    
-    least_benchmark = [basic_spec[1],basic_spec[2],basic_spec[3], basic_spec[4],basic_spec[5],basic_spec[6]]
+    least_benchmark = [basic_spec[1],basic_spec[2],basic_spec[3]]
+    rec_benchmark = [basic_spec[4],basic_spec[5],basic_spec[6]]
     
 
+    # 최저사양 스펙에 대한 가격 총합
     for target in least_spec:
       if target is None or target.price is None:
         continue
       least_price += target.price
-      
+
+    # 권장사양 스펙에 대한 가격 총합
     for target in rec_spec:
       if target is None or target.price is None:
         continue
       rec_price += target.price
     
-    budget = int(budget)
+
+    #=============최저 사양이나 그 가격 정보가 없을 경우 0원으로 처리============
     if least_spec[0] is None or least_spec[0].price is None:
       cprice = 0
     else:
@@ -74,18 +81,38 @@ class Recommendation(APIView):
     else:
       mprice = least_spec[2].price
 
+    #==============최저 사양 가격 정보와 예산을 비교하여 스펙 업스케일===========
+    
+    budget = int(budget)    # 사용자가 입력한 예산
+
     while(least_price < budget):
       higher_cpu = self.getExpensiveComponent(1, cprice)
       higher_gpu = self.getExpensiveComponent(2, gprice)
-      higher_memory = self.getExpensiveComponent(3, mprice)
-      least_price = least_price + higher_cpu.price + higher_gpu.price + higher_memory.price- cprice - gprice - mprice
+      higher_memory = self.getExpensiveComponent(4, mprice)
+      print(gprice, higher_gpu)
+      least_price = least_price\
+        + higher_cpu.price + higher_gpu.price\
+        + higher_memory.price \
+        - cprice - gprice - mprice
       cprice = higher_cpu.price
       gprice = higher_gpu.price
       mprice = higher_memory.price
+
+    # 스펙 업스케일 결과의 벤치마크 점수가 최소사양 벤치마크보다 클 때만 덮어쓰기
+
+    control_cpu = self.getCpuScores(higher_cpu.name)
+    control_gpu = self.getGpuScores(higher_gpu.name)
+    control_memory = self.getMemoryScores(higher_memory.name)
+
+
+    if least_benchmark[0]['benchmark'] < control_cpu['benchmark']:  
       least_spec[0] = higher_cpu
+    if least_benchmark[1]['benchmark'] < control_gpu['benchmark']:  
       least_spec[1] = higher_gpu
+    if least_benchmark[2] < control_memory['price']:
       least_spec[2] = higher_memory
 
+    #=============권장 사양이나 그 가격 정보가 없을 경우 0원으로 처리============
     if rec_spec[0] is None or rec_spec[0].price is None:
       cprice = 0
     else:
@@ -99,26 +126,28 @@ class Recommendation(APIView):
     else:
       mprice = rec_spec[2].price
 
+    #===============권장 사양 가격 정보와 예산을 비교하여 스펙 업스케일링==========
     while(rec_price < budget):
       higher_cpu = self.getExpensiveComponent(1, cprice)
       higher_gpu = self.getExpensiveComponent(2, gprice)
-      higher_memory = self.getExpensiveComponent(3, mprice)
+      higher_memory = self.getExpensiveComponent(4, mprice)
       rec_price = rec_price + higher_cpu.price + higher_gpu.price + higher_memory.price- cprice - gprice - mprice
       cprice = higher_cpu.price
       gprice = higher_gpu.price
       mprice = higher_memory.price
+    
+    control_group = self.getCpuScores(higher_cpu.name)
+    if rec_benchmark[0]['benchmark'] < control_group['benchmark']:    
       rec_spec[0] = higher_cpu
       rec_spec[1] = higher_gpu
       rec_spec[2] = higher_memory
       
-
+    #=================추천 결과를 리스트로 합쳐서 serialize=====================
     result = least_spec + rec_spec
     result = filter(None, result)
     cache.set(redis_key, result)
     serializer = componentSerializer.ComponentSerializer(result, many=True)
     print(time.time() - start)
-
-
     return Response(serializer.data)
 
 
@@ -197,11 +226,7 @@ class Recommendation(APIView):
     result = True
     m_formfactor = mainboard.formfactor.split(' ')[0]
 
-
-
     return result
-
-
 
   # 입력인자 : 비교할 용도 리스트
   # 출릭인자 : 비교,계산,대입이 끝난 용도 객체 하나, 
@@ -262,13 +287,13 @@ class Recommendation(APIView):
         # 권장 사양
       if (lrp[compare] == 0 or rrp[compare] == 0):
         compare = "price"
-      if lrp[compare] <= rrp[compare]:
+      if lrp[compare] < rrp[compare]:
         standard_use.rec_processor = uses[i].rec_processor
         lrp = rrp
       compare = "benchmark"
       if (lrg[compare] == 0 or rrg[compare] == 0):
         compare = "price"
-      if lrg[compare] <= rrg[compare]:
+      if lrg[compare] < rrg[compare]:
         standard_use.rec_graphics = uses[i].rec_graphics
         lrg = rrg
       if (lrm <= rrm):
@@ -283,7 +308,6 @@ class Recommendation(APIView):
       standard_use.rec_processor = self.getCpuWithUse(standard_use.rec_processor, lrp['benchmark'])
       standard_use.rec_graphics = self.getGpuWithUse(standard_use.rec_graphics, lrg['benchmark'])
       standard_use.rec_memory = self.getMemoryWithUse(lrm)
-
     result = [standard_use, llp, llg, llm, lrp, lrg, lrm]
     return result
 
@@ -295,7 +319,7 @@ class Recommendation(APIView):
       .only("price").exclude(price__isnull=True).order_by('price').first()
     if price is None:
       return 0
-    return price
+    return price.price
 
   #====================CPU BenchMark 점수 가져오기 ↓==================================
   cpu_mapping_before = ['코어','제온','펜티엄','셀러론','애슬론','페넘','스레드리퍼','쿼드','라이젠']
@@ -315,14 +339,6 @@ class Recommendation(APIView):
     result = {'benchmark':benchmark, 'price':price}
     return result
   
-  # 입력인자 : Uses CPU name
-  # 용도 테이블의 cpu name에서 영어 명칭을 한글로 매핑
-  # 출력인자 : 매핑이 완료된 uses cpu name
-  def useToCpuMapping(self, use_name):
-    for i in range(len(self.cpu_mapping_before)):
-      use_name.replace(self.cpu_mapping_after[i], self.cpu_mapping_before[i])
-    return use_name
-  
   # 입력인자 : 매핑이 완료된 uses cpu name
   # 검색에 필요한 토큰 구하기
   # 출력인자 : 회사명이 제거되고 split된 uses cpu name 토큰 리스트
@@ -337,13 +353,13 @@ class Recommendation(APIView):
   # 출력인자 : 해당되는 cpu component
   def getCpuWithUse(self, use_name, score):
     cpu_split = self.useCpuParse(use_name)
-    if len(cpu_split) == 2:
+    if len(cpu_split) > 1:
       result = component.Component.objects.select_related('cpu')\
         .filter(data_type=1)\
         .filter(name__icontains=cpu_split[0])\
         .filter(name__icontains=cpu_split[1])\
         .order_by('price').first()
-    elif len(cpu_split) == 1:
+    else:
       result = component.Component.objects.select_related('cpu')\
         .filter(data_type=1)\
         .filter(name__icontains=cpu_split[0])\
@@ -356,8 +372,6 @@ class Recommendation(APIView):
       benchmark_name = higherBenchmark.name
       score = higherBenchmark.score
       result = self.getCpuWithBenchmark(benchmark_name)
-
-    #print(result)
     return result
 
   def getCpuWithBenchmark(self, benchmark_name):
@@ -380,22 +394,18 @@ class Recommendation(APIView):
   # 출력인자 : 매핑이 완료된 cpu name
   def cpuNameMapping(self, row_name):
     for i in range(len(self.cpu_mapping_before)):
-      row_name.replace(self.cpu_mapping_before[i], self.cpu_mapping_after[i])
+      row_name = row_name.replace(self.cpu_mapping_before[i], self.cpu_mapping_after[i])
     row_name.replace('  ',' ')  # 띄워쓰기 중복 없애기
     return row_name
   
   # 입력인자 : mapping이 끝난 cpu name
   # 출력인자 : 회사명, 괄호가 제거되고 split된 cpu_name 토큰 리스트
   def cpuParse(self, row_name):
-    # delete_target = re.findall('\w+\W\w+세대', row_name)
-    # row_name.replace(delete_target, '')
-    braket = re.findall('\(\w+\)', row_name)   # 괄호 내용은 필요없으므로 삭제
-    for i in braket:
-      row_name = row_name.replace(i, '')
-    row_name = re.sub("-[0-9]+세대", " ", row_name)  # '-[0-9]+세대' 정보 삭제
-
-    row_name.replace(' or ', ' ')
-    row_name.strip()     # 양 끝단 공백 split하기 전에 제거
+    row_name = re.sub('\(\w+\)','', row_name)   # 괄호 내용은 필요없으므로 삭제
+    row_name = row_name.replace("-", " ")
+    row_name = re.sub("[0-9]+세대", "", row_name)  # '-[0-9]+세대' 정보 삭제
+    row_name = row_name.replace(' or ', ' ')
+    row_name = row_name.strip()     # 양 끝단 공백 split하기 전에 제거
     cpu_split = row_name.split(' ')
     del cpu_split[0]    # 인텔 / AMD 삭제
     return cpu_split
@@ -404,15 +414,18 @@ class Recommendation(APIView):
   # 출력인자 : 특정지어진다면 해당 밴치마크 점수를, 없다면 0을 반환
   def getCpuBenchmark(self, parsed_name):
     # DB에서 시리즈명으로 검색
-    benchmark_list = BenchMark.objects.filter(name = parsed_name[0])   
+    benchmark_list = BenchMark.objects.filter(name__icontains=parsed_name[0])   
     # 해당 시리즈에 대한 벤치마크를 전부 가져왔으므로 
     # cpu name 토큰들로 일치하는 정보를 검색
     for i in benchmark_list:
       for j in range(1, len(parsed_name)):
         index = i.name.find(parsed_name[j])
         if index != -1:
-          return benchmark_list[i].score
-    return 0
+          return i.score
+    if None in benchmark_list or len(benchmark_list) == 0:
+      return 0
+    else:
+      return benchmark_list[0].score
 
   #====================GPU BenchMark 점수 가져오기 ↓==================================
   # Component에서는 name - manufacture & [0] 버리기, 
@@ -454,7 +467,10 @@ class Recommendation(APIView):
     mapped_name = re.sub('[0-9]+GB',"", mapped_name)  # 용도나 gpu_name의 capacity 삭제
     result = mapped_name.split(' ')
     del result[0]
-    parsed_name = result[0] + " " + result[1]
+    if len(result) > 1:
+      parsed_name = result[0] + " " + result[1]
+    else:
+      parsed_name = result[0]
     return parsed_name
 
   # 입력인자 : 매칭 검색이 가능한 parsed name / 시리즈명+제품명 구성 (gtx 1060)
@@ -484,14 +500,21 @@ class Recommendation(APIView):
       return None
     split_name = use_name.split(' ')
     del split_name[0]
-    result = component.Component.objects.select_related('gpu')\
-      .filter(data_type=2)\
-      .filter(name__icontains=split_name[0])\
-      .filter(name__icontains=split_name[1])\
-      .filter(name__icontains=split_name[2])\
-      .exclude(price__isnull=True, gpu__width__isnull=True)\
-      .order_by('price').first()
-    
+    if len(split_name) > 1:
+      result = component.Component.objects.select_related('gpu')\
+        .filter(data_type=2)\
+        .filter(name__icontains=split_name[0])\
+        .filter(name__icontains=split_name[1])\
+        .filter(name__icontains=split_name[2])\
+        .exclude(price__isnull=True, gpu__width__isnull=True)\
+        .order_by('price').first()
+    else:
+      result = component.Component.objects.select_related('gpu')\
+        .filter(data_type=2)\
+        .filter(name__icontains=split_name[0])\
+        .exclude(price__isnull=True, gpu__width__isnull=True)\
+        .order_by('price').first()
+
     while(True):
       if result is not None:
         break;
@@ -508,7 +531,6 @@ class Recommendation(APIView):
     benchmark_name = benchmark_name.replace("s "," super ", 1)
     benchmark_name = re.sub('\(\w+\)', '', benchmark_name)    # 괄호 내용 삭제
     name_token = benchmark_name.split(' ')
-    #print(benchmark_name)
     result = component.Component.objects.select_related('gpu')\
       .filter(data_type=2)\
       .filter(name__icontains=name_token[0])\
@@ -558,6 +580,7 @@ class Recommendation(APIView):
         break
 
     # name에 2개입으로 들어간 제품인지 검사하고 있다면 parsing
+    bracket_result = ""
     if len(multi_bracket) != 0:   # 내용물이 있다면 이놈을 사용
       bracket = multi_bracket
       bracket = bracket[0].replace('(', '').replace(')','') # findall은 리스트로 반환하기 때문에 0 위치 지정해야함
