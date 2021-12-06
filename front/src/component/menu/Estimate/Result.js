@@ -11,8 +11,12 @@ export default function Result({ list }) {
     return (
         <div className="spec_box">
             <div className="show_box">
-                <div className="show-least" onClick={changeSpec} id="1">최소사양</div>
-                <div className="show-recommand" onClick={changeSpec} id="2">권장사양</div>
+                <div className={
+                    (selected[0].selected == 1 ? "Selected" : "") + " show-least"
+                } onClick={changeSpec} id="1">최소사양</div>
+                <div className={
+                    (selected[1].selected == 1 ? "Selected" : "") + " show-recommand"
+                } onClick={changeSpec} id="2">권장사양</div>
             </div>
             <div
                 className={

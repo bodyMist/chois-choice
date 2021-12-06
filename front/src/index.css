@@ -1046,9 +1046,7 @@ button {
   display: none;
 }
 
-.spec_box .Selected {
-  display:block;
-}
+
 .show_box {
   display:flex;
   flex-direction: row;
@@ -1056,13 +1054,22 @@ button {
   justify-content: center;
   margin-bottom: 30px;
 }
+
 .show-recommand {
   padding: 10px 20px 10px 20px;
   margin: 0px 10px 0px 10px;
-  background-color: pink;
+  background-color: #f2f2f2;
 }
 .show-least{
   padding: 10px 20px 10px 20px;
   margin: 0px 10px 0px 10px;
+  background-color: #f2f2f2;
+}
+.show_box .Selected {
   background-color: pink;
+  font-weight: bold;
+}
+.spec_box .Selected {
+  display:block;
+  
 }
