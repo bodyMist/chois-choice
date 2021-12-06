@@ -59,7 +59,10 @@ const [detail, setDetail] = useState([{"selected":0}, {"selected":0}, {"selected
 const [data, setData] = useState(new Set());
 const [list, setList] = useState([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}])
 const [load, setLoad] = useState(false);
+const [start, setStart] = useState(Date.now());
+const [end, setEnd] = useState(Date.now());
 const setPurpose = (e) => {
+    
     const id = e.target.id;
     let select =[
         {"selected":0}, {"selected":0}, {"selected":0}
@@ -89,11 +92,14 @@ const sendData =(e)=>{
     const budget = document.getElementById("budge").value;
     const uses = [...data];
     console.log(uses)
-    // console.log(params);
+    // console.log(params); 
+    const start = Date.now();
+    setStart(start);
     axios.get(`/estimate/`,{ params: {uses, budget} })
     .then((response)=>{
         setList(response.data);
         setLoad(true);
+        setEnd(Date.now());
         console.log(response);
     })
     .catch((e)=>{
@@ -128,7 +134,7 @@ return (
                     <li className="purpose-li">
                         <div className={(selected[2].selected == 1 ? "Selected" : '')+" purpose-box"}>
                             <button type="button" className=" purpose" onClick={setPurpose} id="3">
-                                딥러닝
+                                영상처리
                             </button>
                         </div>
                     </li>
@@ -158,10 +164,12 @@ return (
                                 </button>
                             </div>
                         </li>
+                    </div>
+                    <div className = {(selected[2].selected == 1 ? "Selected" : '')+" detail"}>
                         <li className="detail-purpose-li">
                             <div className={(detail[3].selected==1?"Selected":'')+" detail-purpose-box"}>
-                                <button type="button" className="detail-purpose-btn" onClick={setDetailPurpose} id="4" name="office">
-                                    문서 작업
+                                <button type="button" className="detail-purpose-btn" onClick={setDetailPurpose} id="4" name="adobe">
+                                    Adobe
                                 </button>
                             </div>
                         </li>
@@ -179,7 +187,12 @@ return (
         <ResultBox name={load}>
             <h5>결과</h5>
             <Result list={list}/>
+            <div className="process_time">
+                경과시간 = {(end-start)/ 1000} 초
+            </div>
+            
         </ResultBox>
+        
     </div>
 );
 }

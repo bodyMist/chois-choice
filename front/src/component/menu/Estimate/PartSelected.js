@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 import data from "../menulist.json";
 export default function PartSelected({ getPartInf, sList}) {
 const location = useLocation();
-console.log(location.state)
   const getPartName = (e) => {
     const id = e.target.id;
     let select = [

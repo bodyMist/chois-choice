@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 export default function PcEstimate() {
   const location = useLocation();
-console.log(location)
   const [list, setList] = useState([]);
   const [fList, setFList] = useState([]);
   const [page, setPage] = useState(1);
@@ -39,7 +38,6 @@ console.log(location)
       setSlist(location.state[0].data)
   },[location])
   const pageHandler = (pg) => {
-    console.log(pg)
     setPage(pg);
     let array = [];
     let start = (pg - 1) * 10;
@@ -51,7 +49,6 @@ console.log(location)
   };
 
   const setListByPage = (li) => {
-    console.log(li);
     let array = [];
     let start = (page - 1) * 10;
     for (let i = start; i < start + 10; i++) {
@@ -104,7 +101,6 @@ console.log(location)
         },
       })
       .then((response) => {
-        console.log(response.data)
         if(response.data.length === 0) {
           alert("검색 결과가 없습니다.")
         }
@@ -113,7 +109,7 @@ console.log(location)
         }
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
   }
   const onKeyPress = (e) => {
