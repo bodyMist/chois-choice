@@ -1,12 +1,14 @@
 from rest_framework.views   import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse
+from django.core.cache import cache
 # from .serializer import *
 from .models import *
 from component import models as component
 from component import serializer as componentSerializer
 
-#문자열 파싱용
-import re 
+#문자열 파싱용, 기능 수행시간 측정용
+import re, time
 
 # Create your views here.
 
@@ -19,9 +21,18 @@ import re
 class Recommendation(APIView):
   
   def get(self, request, format=None):
+    start = time.time()
     uses_name = request.GET.getlist('uses')     # 용도는 다수 입력이 가능(이름만 넘어옴)
     budget = request.GET.get('budget')
-    current_price = 0                           # 현재 견적에서의 총 가격
+    redis_key = "uses_" + ''.join(uses_name) + "_" + "budget_" + budget
+    value = cache.get(redis_key)
+
+    if value is not None:
+      serializer = componentSerializer.ComponentSerializer(value, many=True)
+      print(time.time() - start)
+      return Response(serializer.data)
+    least_price = 0                           # 현재 견적에서의 총 가격
+    rec_price = 0
     use_list = []
     for use in uses_name:
       target = Uses.objects.get(name = use)  # 용도 이름으로 각각 용도 객체 검색
@@ -30,20 +41,31 @@ class Recommendation(APIView):
     basic_spec = self.getMaxUse(use_list)       # 용도 리스트에 대해 최고치 사양 구하기
     
     least_spec= [basic_spec[0].least_processor, basic_spec[0].least_graphics, basic_spec[0].least_memory]
-    #if None in least_spec:
-    
     least_spec.extend(self.getBasicComponents(least_spec[0], least_spec[1], least_spec[2]))
     
-    least_benchmark = [basic_spec[1],basic_spec[2],basic_spec[3]
-    ,basic_spec[4],basic_spec[5],basic_spec[6]]
-
-    print(least_spec)
+    rec_spec = [basic_spec[0].rec_processor, basic_spec[0].rec_graphics, basic_spec[0].rec_memory]
+    try:
+      rec_spec.extend(self.getBasicComponents(rec_spec[0], least_spec[1], least_spec[2]))
+    except:
+      pass
+    
+    least_benchmark = [basic_spec[1],basic_spec[2],basic_spec[3], basic_spec[4],basic_spec[5],basic_spec[6]]
+    
     for target in least_spec:
       if target is None or target.price is None:
         continue
-      current_price += target.price
-    serializer = componentSerializer.ComponentSerializer(least_spec, many=True)
-    return Response(serializer.data);
+      least_price += target.price
+    
+    for target in rec_spec:
+      if target is None or target.price is None:
+        continue
+      rec_price += target.price
+    result = least_spec + rec_spec
+    cache.set(redis_key, result)
+    serializer = componentSerializer.ComponentSerializer(result, many=True)
+    print(time.time() - start)
+    return Response(serializer.data)
+
 
   # 용도 기준치를 잡은 후 나머지 부품들도 채우기 위한 함수
   # hdd : 500gb, ssd : 250gb, mainboard : ? , cooler : X, case : 적당히?, power: gpu required_power + 100W
@@ -185,12 +207,12 @@ class Recommendation(APIView):
     
     # 용도 테이블의 요구사항 이름을 가지고 있으면 이 함수 이후에 바로 부품을 바꿀수 없기 때문에
     # 특정 Component로 교체해서 반환한다
-    standard_use.least_processor = self.getCpuWithUse(standard_use.least_processor)
+    standard_use.least_processor = self.getCpuWithUse(standard_use.least_processor, llp['benchmark'])
     standard_use.least_graphics = self.getGpuWithUse(standard_use.least_graphics, llg['benchmark'])
     standard_use.least_memory = self.getMemoryWithUse(llm)
     if standard_use.rec_processor is not None:
-      standard_use.rec_processor = self.getCpuWithUse(standard_use.rec_processor)
-      standard_use.rec_graphics = self.getGpuWithUse(standard_use.rec_graphics)
+      standard_use.rec_processor = self.getCpuWithUse(standard_use.rec_processor, lrp['benchmark'])
+      standard_use.rec_graphics = self.getGpuWithUse(standard_use.rec_graphics, lrg['benchmark'])
       standard_use.rec_memory = self.getMemoryWithUse(lrm)
 
     
@@ -241,15 +263,37 @@ class Recommendation(APIView):
   # 입력인자 : 용도 테이블의 cpu 이름
   # 토큰 리스트를 이용해서 가격이 가장 낮은 cpu component 반환
   # 출력인자 : 해당되는 cpu component
-  def getCpuWithUse(self, use_name):
+  def getCpuWithUse(self, use_name, score):
     cpu_split = self.useCpuParse(use_name)
     result = component.Component.objects.select_related('cpu')\
       .filter(data_type=1)\
       .filter(name__icontains=cpu_split[0])\
       .filter(name__icontains=cpu_split[1])\
       .order_by('price').first()
+    
+    while(True):
+      if result is not None:
+        break;
+      higherBenchmark = self.getHigherBenchmark(1, score)
+      benchmark_name = higherBenchmark.name
+      score = higherBenchmark.score
+      result = self.getCpuWithBenchmark(benchmark_name)
+
     return result
 
+  def getCpuWithBenchmark(self, benchmark_name):
+    benchmark_name = benchmark_name.replace("-", " ")
+    benchmark_name = benchmark_name.replace("s "," super ", 1)
+    benchmark_name = re.sub('\(\w+\)', '', benchmark_name)    # 괄호 내용 삭제
+    name_token = benchmark_name.split(' ')
+    #print(benchmark_name)
+    result = component.Component.objects.select_related('cpu')\
+      .filter(data_type=1)\
+      .filter(name__icontains=name_token[0])\
+      .filter(name__icontains=name_token[1])\
+      .exclude(price__isnull=True, cpu__socket__isnull=True)\
+      .order_by('price').first()
+    return result
 
 
   # 입력인자 : DB의 Component 또는 Uses CPU name(processor)
@@ -370,7 +414,6 @@ class Recommendation(APIView):
       benchmark_name = higherBenchmark.name
       score = higherBenchmark.score
       result = self.getGpuWithBenchmark(benchmark_name)
-
 
     return result
 
