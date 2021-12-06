@@ -126,8 +126,10 @@ class Recommendation(APIView):
     #     least_spec[2] = higher_memory
     least_spec[0] = higher_cpu
     least_spec[1] = higher_gpu  
-    least_spec[2] = higher_memory        
-
+    least_spec[2] = higher_memory
+    if least_spec[1] is None:
+      least_spec[1]=component.Component()
+    
 
     #=============권장 사양이나 그 가격 정보가 없을 경우 0원으로 처리============
     if rec_spec[0] is None or rec_spec[0].price is None:
