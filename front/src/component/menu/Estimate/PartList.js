@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import Part from "./Part";
 
 export default function PartList({list, selectPart}) {
-  console.log(list);
   return (
     <tbody className="StuffList">
       {list.map((listdata) => (

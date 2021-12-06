@@ -19,7 +19,7 @@ ul.pagination li {
 } 
 @media (max-width:600px) {
   ul.pagination li {
-    width: 20px;
+    width: 2rem;
   }
 }
 ul.pagination li:first-child { 
@@ -45,4 +45,8 @@ ul.pagination li a:hover, ul.pagination li a.active {
 } 
 .page-selection { 
   width: 48px; height: 30px; color: #337ab7; 
+}
+
+.detail-purpose{
+  display: none;
 }

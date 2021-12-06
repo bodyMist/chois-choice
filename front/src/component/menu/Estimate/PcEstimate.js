@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PartSelect from "./PartSelect";
 import PartSelected from "./PartSelected";
 import axios from "axios";
@@ -6,34 +6,38 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 export default function PcEstimate() {
+  const location = useLocation();
+console.log(location)
   const [list, setList] = useState([]);
   const [fList, setFList] = useState([]);
   const [page, setPage] = useState(1);
   const [sList, setSlist] = useState([
-    { id: 1, name: "미선택" },
-    { id: 2, name: "미선택" },
-    { id: 3, name: "미선택" },
-    { id: 4, name: "미선택" },
-    { id: 5, name: "미선택" },
-    { id: 6, name: "미선택" },
-    { id: 7, name: "미선택" },
-    { id: 8, name: "미선택" },
-    { id: 9, name: "미선택" },
+    { id: 1, name: "미선택", image_url: "" },
+    { id: 2, name: "미선택", image_url: "" },
+    { id: 3, name: "미선택", image_url: "" },
+    { id: 4, name: "미선택", image_url: "" },
+    { id: 5, name: "미선택", image_url: "" },
+    { id: 6, name: "미선택", image_url: "" },
+    { id: 7, name: "미선택", image_url: "" },
+    { id: 8, name: "미선택", image_url: "" },
+    { id: 9, name: "미선택", image_url: "" },
   ]);
   useEffect(() => {
     axios
       .get(`/component?id=1`)
       .then((response) => {
-        setFList(response.data);
-        setListByPage([...response.data]);
-        console.log(response.data)
+        setFList([...response.data.reverse()]);
+        setListByPage(response.data);
       })
       .catch((e) => {
         console.error(e);
       });
   }, []);
 
-
+  useEffect(()=>{
+    if(location.state)
+      setSlist(location.state[0].data)
+  },[location])
   const pageHandler = (pg) => {
     console.log(pg)
     setPage(pg);
@@ -47,6 +51,7 @@ export default function PcEstimate() {
   };
 
   const setListByPage = (li) => {
+    console.log(li);
     let array = [];
     let start = (page - 1) * 10;
     for (let i = start; i < start + 10; i++) {
@@ -60,8 +65,8 @@ export default function PcEstimate() {
     axios
       .get(`/component`, { params: { id } })
       .then((response) => {
-        setFList(response.data);
-        setListByPage(response.data)
+        setFList([...response.data.reverse()]);
+        setListByPage(response.data.reverse());
       })
       .catch((e) => {
         console.error(e);
@@ -71,7 +76,7 @@ export default function PcEstimate() {
   const selectPart = (component_id) => {
     const l = list.filter((list) => list.component_id == component_id)[0];
     let array = [...sList];
-    array[l.data_type - 1] = { id: l.data_type, name: l.name };
+    array[l.data_type - 1] = { id: l.data_type, name: l.name, image_url:l.image_url };
     setSlist(array);
   };
 
@@ -80,7 +85,8 @@ export default function PcEstimate() {
     axios
       .get(`/component`, { params: { id } })
       .then((response) => {
-        setFList(response.data);
+        setFList([...response.data.reverse()]);
+        setListByPage(response.data.reverse());
       })
       .catch((e) => {
         console.error(e);
