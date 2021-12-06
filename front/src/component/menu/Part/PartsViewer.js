@@ -87,7 +87,7 @@ export default function PartsViewer() {
         axios
             .get(`/component/${id}/list`)
             .then((response) => {
-                setFList(response.data);
+                setFList(response.data.reverse());
                 setListByPage([...response.data])
             })
             .catch((e) => {
