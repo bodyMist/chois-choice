@@ -39,31 +39,86 @@ class Recommendation(APIView):
       use_list.append(target)                   # 용도 리스트에 추가
     
     basic_spec = self.getMaxUse(use_list)       # 용도 리스트에 대해 최고치 사양 구하기
-    
-    least_spec= [basic_spec[0].least_processor, basic_spec[0].least_graphics, basic_spec[0].least_memory]
-    least_spec.extend(self.getBasicComponents(least_spec[0], least_spec[1], least_spec[2]))
-    
-    rec_spec = [basic_spec[0].rec_processor, basic_spec[0].rec_graphics, basic_spec[0].rec_memory]
     try:
+      least_spec= [basic_spec[0].least_processor, basic_spec[0].least_graphics, basic_spec[0].least_memory]
+      least_spec.extend(self.getBasicComponents(least_spec[0], least_spec[1], least_spec[2]))
+      rec_spec = [basic_spec[0].rec_processor, basic_spec[0].rec_graphics, basic_spec[0].rec_memory]
       rec_spec.extend(self.getBasicComponents(rec_spec[0], least_spec[1], least_spec[2]))
     except:
       pass
     
     least_benchmark = [basic_spec[1],basic_spec[2],basic_spec[3], basic_spec[4],basic_spec[5],basic_spec[6]]
     
+
     for target in least_spec:
       if target is None or target.price is None:
         continue
       least_price += target.price
-    
+      
     for target in rec_spec:
       if target is None or target.price is None:
         continue
       rec_price += target.price
+    
+    budget = int(budget)
+    if least_spec[0] is None or least_spec[0].price is None:
+      cprice = 0
+    else:
+      cprice = least_spec[0].price
+    if least_spec[1] is None or least_spec[1].price is None:
+      gprice = 0
+    else:
+      gprice = least_spec[1].price
+    if least_spec[2] is None or least_spec[2].price is None:
+      mprice = 0
+    else:
+      mprice = least_spec[2].price
+
+    while(least_price < budget):
+      higher_cpu = self.getExpensiveComponent(1, cprice)
+      higher_gpu = self.getExpensiveComponent(2, gprice)
+      higher_memory = self.getExpensiveComponent(3, mprice)
+      least_price = least_price + higher_cpu.price + higher_gpu.price + higher_memory.price- cprice - gprice - mprice
+      cprice = higher_cpu.price
+      gprice = higher_gpu.price
+      mprice = higher_memory.price
+      least_spec[0] = higher_cpu
+      least_spec[1] = higher_gpu
+      least_spec[2] = higher_memory
+
+    if rec_spec[0] is None or rec_spec[0].price is None:
+      cprice = 0
+    else:
+      cprice = rec_spec[0].price
+    if rec_spec[1] is None or rec_spec[1].price is None:
+      gprice = 0
+    else:
+      gprice = rec_spec[1].price
+    if rec_spec[2] is None or rec_spec[2].price is None:
+      mprice = 0
+    else:
+      mprice = rec_spec[2].price
+
+    while(rec_price < budget):
+      higher_cpu = self.getExpensiveComponent(1, cprice)
+      higher_gpu = self.getExpensiveComponent(2, gprice)
+      higher_memory = self.getExpensiveComponent(3, mprice)
+      rec_price = rec_price + higher_cpu.price + higher_gpu.price + higher_memory.price- cprice - gprice - mprice
+      cprice = higher_cpu.price
+      gprice = higher_gpu.price
+      mprice = higher_memory.price
+      rec_spec[0] = higher_cpu
+      rec_spec[1] = higher_gpu
+      rec_spec[2] = higher_memory
+      
+
     result = least_spec + rec_spec
+    result = filter(None, result)
     cache.set(redis_key, result)
     serializer = componentSerializer.ComponentSerializer(result, many=True)
     print(time.time() - start)
+
+
     return Response(serializer.data)
 
 
@@ -83,10 +138,16 @@ class Recommendation(APIView):
       .exclude(price__isnull=True, mainboard__formfactor__isnull=True)\
       .order_by('price').first()
 
+    if gpu is None or gpu.gpu.required_power is None:
+      gpower = 300
+    else:
+      gpower = gpu.gpu.required_power
 
-    gpower = gpu.gpu.required_power
-    if gpower is None:
-      gpower = 0
+    if gpu is None or gpu.gpu.width is None:
+      gwidth = 0
+    else:
+      gwidth = gpu.gpu.width
+
     power = component.Component.objects.select_related('power')\
       .filter(data_type=7, power__output__gte=(gpower+100))\
       .exclude(price__isnull=True).order_by('price').first()
@@ -95,7 +156,7 @@ class Recommendation(APIView):
     p_type = power.power.type.split(' ')[0]
 
     case = component.Component.objects.select_related('case')\
-      .filter(data_type=9, case__depth__gte=(gpu.gpu.width+50))\
+      .filter(data_type=9, case__depth__gte=(gwidth+50))\
       .exclude(price__isnull=True).order_by('price').first()
     
     result = [mainboard, hdd, ssd, power, case]
@@ -108,6 +169,14 @@ class Recommendation(APIView):
       .order_by('score').first()
     return higherBench
 
+  # 더 높은 가격의 부품을 1개 반환
+  # 가격 상한선까지 견적을 높이기 위해 사용
+  def getExpensiveComponent(self, data_type, price):
+    expensive = component.Component.objects\
+      .filter(data_type=data_type, price__gt=price)\
+      .exclude(price__isnull=True)\
+      .order_by('price').first()
+    return expensive
 
   # 호환성 체크1
   # cpu, gpu, mainboard 간의 소켓 및 지원 규격 체크
@@ -159,7 +228,7 @@ class Recommendation(APIView):
       if standard_use.rec_graphics is not None else zero_dictionary
     lrm = standard_use.rec_memory \
       if standard_use.rec_memory is not None else 0
-
+    
     for i in range(1, len(uses)):
       # 비교대상이 될 용도들에 대해서 benchmark와 가격 가져오기
       rlp = self.getCpuScores(uses[i].least_processor)
@@ -193,29 +262,28 @@ class Recommendation(APIView):
         # 권장 사양
       if (lrp[compare] == 0 or rrp[compare] == 0):
         compare = "price"
-      if lrp[compare] < rrp[compare]:
+      if lrp[compare] <= rrp[compare]:
         standard_use.rec_processor = uses[i].rec_processor
         lrp = rrp
       compare = "benchmark"
       if (lrg[compare] == 0 or rrg[compare] == 0):
         compare = "price"
-      if lrg[compare] < rrg[compare]:
+      if lrg[compare] <= rrg[compare]:
         standard_use.rec_graphics = uses[i].rec_graphics
         lrg = rrg
-      if (lrm < rrm):
+      if (lrm <= rrm):
         lrm = rrm
-    
     # 용도 테이블의 요구사항 이름을 가지고 있으면 이 함수 이후에 바로 부품을 바꿀수 없기 때문에
     # 특정 Component로 교체해서 반환한다
     standard_use.least_processor = self.getCpuWithUse(standard_use.least_processor, llp['benchmark'])
     standard_use.least_graphics = self.getGpuWithUse(standard_use.least_graphics, llg['benchmark'])
     standard_use.least_memory = self.getMemoryWithUse(llm)
+
     if standard_use.rec_processor is not None:
       standard_use.rec_processor = self.getCpuWithUse(standard_use.rec_processor, lrp['benchmark'])
       standard_use.rec_graphics = self.getGpuWithUse(standard_use.rec_graphics, lrg['benchmark'])
       standard_use.rec_memory = self.getMemoryWithUse(lrm)
 
-    
     result = [standard_use, llp, llg, llm, lrp, lrg, lrm]
     return result
 
@@ -225,7 +293,8 @@ class Recommendation(APIView):
   def getComponentPrice(self, component_name):
     price = component.Component.objects.filter(name__icontains=component_name) \
       .only("price").exclude(price__isnull=True).order_by('price').first()
-
+    if price is None:
+      return 0
     return price
 
   #====================CPU BenchMark 점수 가져오기 ↓==================================
@@ -236,6 +305,9 @@ class Recommendation(APIView):
   # 출력인자 : benchmark 점수 & 최저가 price 의 dictionary
   # cpu 1개에 대한 과정!
   def getCpuScores(self, row_name):
+    zero_dictionary = {'benchmark':0, 'price':0}
+    if row_name is None:
+      return zero_dictionary
     mapped_name = self.cpuNameMapping(row_name)
     parsed_name = self.cpuParse(mapped_name)
     benchmark = self.getCpuBenchmark(parsed_name)
@@ -265,12 +337,18 @@ class Recommendation(APIView):
   # 출력인자 : 해당되는 cpu component
   def getCpuWithUse(self, use_name, score):
     cpu_split = self.useCpuParse(use_name)
-    result = component.Component.objects.select_related('cpu')\
-      .filter(data_type=1)\
-      .filter(name__icontains=cpu_split[0])\
-      .filter(name__icontains=cpu_split[1])\
-      .order_by('price').first()
-    
+    if len(cpu_split) == 2:
+      result = component.Component.objects.select_related('cpu')\
+        .filter(data_type=1)\
+        .filter(name__icontains=cpu_split[0])\
+        .filter(name__icontains=cpu_split[1])\
+        .order_by('price').first()
+    elif len(cpu_split) == 1:
+      result = component.Component.objects.select_related('cpu')\
+        .filter(data_type=1)\
+        .filter(name__icontains=cpu_split[0])\
+        .order_by('price').first()
+
     while(True):
       if result is not None:
         break;
@@ -279,6 +357,7 @@ class Recommendation(APIView):
       score = higherBenchmark.score
       result = self.getCpuWithBenchmark(benchmark_name)
 
+    #print(result)
     return result
 
   def getCpuWithBenchmark(self, benchmark_name):
@@ -286,7 +365,7 @@ class Recommendation(APIView):
     benchmark_name = benchmark_name.replace("s "," super ", 1)
     benchmark_name = re.sub('\(\w+\)', '', benchmark_name)    # 괄호 내용 삭제
     name_token = benchmark_name.split(' ')
-    #print(benchmark_name)
+
     result = component.Component.objects.select_related('cpu')\
       .filter(data_type=1)\
       .filter(name__icontains=name_token[0])\
@@ -341,6 +420,9 @@ class Recommendation(APIView):
   # capacity로 기입되어 있을 경우, component에서 name으로 검색 -> 그 중에서
 
   def getGpuScores(self, row_name):
+    zero_dictionary = {'benchmark':0, 'price':0}
+    if row_name is None:
+      return zero_dictionary
     mapped_name = self.gpuMapping(row_name)
     parsed_name = self.gpuParse(mapped_name)
     benchmark = self.getGpuBenchmark(parsed_name)
@@ -394,9 +476,12 @@ class Recommendation(APIView):
   # 용도의 그래픽 요구사항 이름을 가지고 특정 component를 검색
   # split하고 회사명과 시리즈 명(대분류)을 삭제, 이후 토큰들로 검색
   # 검색할 토큰은 총 3개라고 전제조건을 걸어둔다 (이에 맞게 db 데이터를 넣으라는 뜻)
+  # 검색 결과가 없을 경우 벤치마크 점수가 더 높은 제품을 탐색
   # 입력인자 : 용도 테이블의 그래픽 이름
   # 출력인자 : 해당되는 종류의 그래픽 카드 중 최저가 객체 1개
   def getGpuWithUse(self, use_name, score):
+    if use_name is None:      # 인터넷 서핑 용도의 경우 글카가 필요없음
+      return None
     split_name = use_name.split(' ')
     del split_name[0]
     result = component.Component.objects.select_related('gpu')\
