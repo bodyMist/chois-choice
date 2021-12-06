@@ -1,9 +1,8 @@
 from rest_framework.views   import APIView
 from rest_framework.response import Response
-from django.http import JsonResponse
 from django.core.cache import cache
-# from .serializer import *
 from .models import *
+from .serializers import *
 from component import models as component
 from component import serializer as componentSerializer
 
@@ -47,7 +46,7 @@ class Recommendation(APIView):
       least_spec= [basic_spec[0].least_processor, basic_spec[0].least_graphics, basic_spec[0].least_memory]
       least_spec.extend(self.getBasicComponents(least_spec[0], least_spec[1], least_spec[2]))
       rec_spec = [basic_spec[0].rec_processor, basic_spec[0].rec_graphics, basic_spec[0].rec_memory]
-      rec_spec.extend(self.getBasicComponents(rec_spec[0], least_spec[1], least_spec[2]))
+      rec_spec.extend(self.getBasicComponents(rec_spec[0], rec_spec[1], rec_spec[2]))
     except:
       pass
     least_benchmark = [basic_spec[1],basic_spec[2],basic_spec[3]]
@@ -85,11 +84,14 @@ class Recommendation(APIView):
     
     budget = int(budget)    # 사용자가 입력한 예산
 
+    higher_cpu=least_spec[0]
+    higher_gpu=least_spec[1]
+    higher_memory=least_spec[2]
+
     while(least_price < budget):
       higher_cpu = self.getExpensiveComponent(1, cprice)
       higher_gpu = self.getExpensiveComponent(2, gprice)
       higher_memory = self.getExpensiveComponent(4, mprice)
-      print(gprice, higher_gpu)
       least_price = least_price\
         + higher_cpu.price + higher_gpu.price\
         + higher_memory.price \
@@ -98,19 +100,34 @@ class Recommendation(APIView):
       gprice = higher_gpu.price
       mprice = higher_memory.price
 
+
     # 스펙 업스케일 결과의 벤치마크 점수가 최소사양 벤치마크보다 클 때만 덮어쓰기
 
     control_cpu = self.getCpuScores(higher_cpu.name)
-    control_gpu = self.getGpuScores(higher_gpu.name)
+    if higher_gpu is not None:
+      control_gpu = self.getGpuScores(higher_gpu.name)
     control_memory = self.getMemoryScores(higher_memory.name)
 
+    # if least_benchmark[0]['benchmark'] < control_cpu['benchmark']:   
+    #   if least_benchmark[1]['benchmark'] < control_gpu['benchmark']:  
+    #     if least_benchmark[2] < control_memory['price']:
+    #       least_spec[0] = higher_cpu
+    #       least_spec[1] = higher_gpu
+    #       least_spec[2] = higher_memory
+    # print(least_benchmark[0]['benchmark'])
+    # print(control_cpu['benchmark'])
 
-    if least_benchmark[0]['benchmark'] < control_cpu['benchmark']:  
-      least_spec[0] = higher_cpu
-    if least_benchmark[1]['benchmark'] < control_gpu['benchmark']:  
-      least_spec[1] = higher_gpu
-    if least_benchmark[2] < control_memory['price']:
-      least_spec[2] = higher_memory
+    # if least_benchmark[0]['benchmark'] < control_cpu['benchmark']:
+    #     least_spec[0] = higher_cpu
+    # if higher_gpu is not None:
+    #   if least_benchmark[1]['benchmark'] < control_gpu['benchmark']:
+    #       least_spec[1] = higher_gpu  
+    # if least_benchmark[2] < control_memory['price']:
+    #     least_spec[2] = higher_memory
+    least_spec[0] = higher_cpu
+    least_spec[1] = higher_gpu  
+    least_spec[2] = higher_memory        
+
 
     #=============권장 사양이나 그 가격 정보가 없을 경우 0원으로 처리============
     if rec_spec[0] is None or rec_spec[0].price is None:
@@ -137,11 +154,16 @@ class Recommendation(APIView):
       mprice = higher_memory.price
     
     control_group = self.getCpuScores(higher_cpu.name)
-    if rec_benchmark[0]['benchmark'] < control_group['benchmark']:    
+    # if rec_benchmark[0]['benchmark'] < control_group['benchmark']:    
+    #   rec_spec[0] = higher_cpu
+    #   rec_spec[1] = higher_gpu
+    #   rec_spec[2] = higher_memory
+    if rec_price < budget:
       rec_spec[0] = higher_cpu
-      rec_spec[1] = higher_gpu
-      rec_spec[2] = higher_memory
-      
+      rec_spec[1] = higher_gpu  
+      rec_spec[2] = higher_memory      
+    else:
+      rec_spec = least_spec
     #=================추천 결과를 리스트로 합쳐서 serialize=====================
     result = least_spec + rec_spec
     result = filter(None, result)
@@ -157,7 +179,7 @@ class Recommendation(APIView):
     hdd = component.Component.objects.select_related('hdd')\
       .filter(data_type=5, hdd__capacity="500GB")\
       .exclude(price__isnull=True).order_by('price').first()
-
+    
     ssd = component.Component.objects.select_related('ssd')\
       .filter(data_type=6, ssd__capacity="240GB")\
       .exclude(price__isnull=True).order_by('price').first()
@@ -372,6 +394,7 @@ class Recommendation(APIView):
       benchmark_name = higherBenchmark.name
       score = higherBenchmark.score
       result = self.getCpuWithBenchmark(benchmark_name)
+      
     return result
 
   def getCpuWithBenchmark(self, benchmark_name):
@@ -379,13 +402,21 @@ class Recommendation(APIView):
     benchmark_name = benchmark_name.replace("s "," super ", 1)
     benchmark_name = re.sub('\(\w+\)', '', benchmark_name)    # 괄호 내용 삭제
     name_token = benchmark_name.split(' ')
-
-    result = component.Component.objects.select_related('cpu')\
-      .filter(data_type=1)\
-      .filter(name__icontains=name_token[0])\
-      .filter(name__icontains=name_token[1])\
-      .exclude(price__isnull=True, cpu__socket__isnull=True)\
-      .order_by('price').first()
+    del name_token[0]
+    if len(name_token) > 1:
+      result = component.Component.objects.select_related('cpu')\
+        .filter(data_type=1)\
+        .filter(name__icontains=name_token[0])\
+        .filter(name__icontains=name_token[1])\
+        .exclude(price__isnull=True, cpu__socket__isnull=True)\
+        .order_by('price').first()
+    else:  
+      result = component.Component.objects.select_related('cpu')\
+        .filter(data_type=1)\
+        .filter(name__icontains=name_token[0])\
+        .exclude(price__isnull=True, cpu__socket__isnull=True)\
+        .order_by('price').first()
+    
     return result
 
 
@@ -500,7 +531,7 @@ class Recommendation(APIView):
       return None
     split_name = use_name.split(' ')
     del split_name[0]
-    if len(split_name) > 1:
+    if len(split_name) > 2:
       result = component.Component.objects.select_related('gpu')\
         .filter(data_type=2)\
         .filter(name__icontains=split_name[0])\
