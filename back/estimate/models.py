@@ -48,7 +48,6 @@ class Annotations(models.Model):
 class Uses(models.Model):
     uses_id = models.IntegerField(primary_key=True)
     type = models.PositiveIntegerField()
-    game_genre = models.PositiveIntegerField(blank=True, null=True)
     name = models.CharField(max_length=40, blank=True, null=True)
     least_processor = models.CharField(max_length=100, blank=True, null=True)
     least_graphics = models.CharField(max_length=100, blank=True, null=True)
