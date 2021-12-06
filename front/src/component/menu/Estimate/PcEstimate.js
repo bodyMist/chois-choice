@@ -63,7 +63,7 @@ export default function PcEstimate() {
       .get(`/component`, { params: { id } })
       .then((response) => {
         setFList([...response.data.reverse()]);
-        setListByPage(response.data.reverse());
+        setListByPage(response.data);
       })
       .catch((e) => {
         console.error(e);
@@ -83,7 +83,7 @@ export default function PcEstimate() {
       .get(`/component`, { params: { id } })
       .then((response) => {
         setFList([...response.data.reverse()]);
-        setListByPage(response.data.reverse());
+        setListByPage(response.data);
       })
       .catch((e) => {
         console.error(e);
