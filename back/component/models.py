@@ -142,7 +142,7 @@ class Cooler(models.Model):
     tdp = models.IntegerField(blank=True, null=True)
     intel_socket = models.CharField(max_length=100, blank=True, null=True)
     amd_socket = models.CharField(max_length=100, blank=True, null=True)
-    component_componenet = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         managed = True
@@ -159,7 +159,7 @@ class Power(models.Model):
     pcie_hexa = models.CharField(max_length=20, blank=True, null=True)
     sata = models.CharField(max_length=20, blank=True, null=True)
     ide = models.CharField(max_length=20, blank=True, null=True)
-    component_componenet = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         managed = True
@@ -176,7 +176,7 @@ class Case(models.Model):
     width = models.IntegerField(blank=True, null=True)
     depth = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
-    component_component = models.OneToOneField('Component', on_delete=models.CASCADE, primary_key=True)
+    component_component = models.OneToOneField(Component, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         managed = True

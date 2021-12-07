@@ -127,7 +127,7 @@ class CaseListView(APIView):
     def get(self,request,format=None):
         #queryset=Case.objects.all().only("type","size","compatibility")
         queryset = cache.get_or_set('case_list', Case.objects.all())
-        serializer=CaseListSerializer(queryset)
+        serializer=CaseListSerializer(queryset, many=True)
         return Response(serializer.data)
 class CaseDetailView(APIView):
     def get(self, request, format=None):
