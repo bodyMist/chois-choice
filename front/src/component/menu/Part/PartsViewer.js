@@ -73,7 +73,6 @@ export default function PartsViewer() {
         setList([...array]);
     };
     const setListByPage = (li) => {
-        console.log(isFilter)
         let array = [];
         let start = (page - 1) * 10;
         for (let i = start; i < start + 10; i++) {
@@ -89,6 +88,7 @@ export default function PartsViewer() {
             .then((response) => {
                 setFList(response.data.reverse());
                 setListByPage([...response.data])
+                console.log(response.data)
             })
             .catch((e) => {
                 console.error(e);

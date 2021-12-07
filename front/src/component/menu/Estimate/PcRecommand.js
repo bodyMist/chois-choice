@@ -21,7 +21,6 @@ position: relative;
 width: 100%;
 max-width: 300px;
 `;
-
 const SubmitBtn = styled.button`
 margin-left: -1px;
 white-space: unset;
@@ -61,6 +60,7 @@ const [list, setList] = useState([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{
 const [load, setLoad] = useState(false);
 const [start, setStart] = useState(Date.now());
 const [end, setEnd] = useState(Date.now());
+
 const setPurpose = (e) => {
     
     const id = e.target.id;
@@ -70,6 +70,7 @@ const setPurpose = (e) => {
     select[id-1].selected=1;
     setSelected(select)
 }
+
 const setDetailPurpose = (e) =>{
     const id = e.target.id;
     const name = e.target.name;

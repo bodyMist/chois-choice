@@ -239,6 +239,32 @@
                 {"name":"18"}, {"name":"16"}, {"name":"14"}, {"name":"12"}, {"name":"10"}, 
                 {"name":"6"}, {"name":"5"}, {"name":"1.5"}
             ]
+        ],
+        [
+            [
+                {"title":"제조사", "id":"manufacture"},
+                {"name":"삼성전자"}, {"name":"마이크론"}, {"name":"SK하이닉스"}, {"name":"Western Digital"},
+                {"name":"Seagate"}
+            ]
+        ],
+        [
+            [
+                {"title":"제조사", "id":"manufacture"}, 
+                {"name":"시소닉"}, {"name":"쿨러마스터"}, {"name":"마이크로닉스"}, {"name":"FSP"}
+            ]
+        ],
+        [
+            [
+                {"title":"제조사", "id":"manufacture"},
+                {"name":"쿨러마스터"}, {"name":"darkFlash"}, {"name":"리안리"}, {"name":"얼티메이크"}, {"name":"DEEPCOOL"},
+                {"name":"NZXT"}, {"name":"CORSAIR"}, {"name":"잘만"}
+            ]
+        ],
+        [
+            [
+                {"title":"제조사", "id":"manufacture"},
+                {"name":"앱코"}, {"name":"darkFlash"}, {"name":"쿨러마스터"}, {"name":"아이구주"}, {"name":"COX"}, {"name":"3RSYS"}
+            ]
         ]
     ]
 }

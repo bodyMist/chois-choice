@@ -2,12 +2,13 @@
 // import Image from "../mainPage/Image";
 // import MenuList from "../mainPage/MenuList";
 
+import Estimate from "./Estimate/Estimate";
+import PartsViewer from "./Part/PartsViewer";
+
 export default function Main() {
   return (
     <>
-      {/* <MenuList></MenuList> */}
-      {/* <Image></Image>
-            <BestPost></BestPost> */}
+      <PartsViewer />
     </>
   );
 }

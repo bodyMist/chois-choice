@@ -452,7 +452,9 @@ button {
     padding: 0;
   }
 }
-
+.WillSelect {
+  height: 2rem;;
+}
 .WillSelect .text{
   width: 100%;
   float: left;
@@ -460,7 +462,7 @@ button {
   min-height: 1px;
   padding: 5px;
   margin-top: 0;
-  margin-bottom: 1rem;
+  
   font-size: 1rem;
   white-space: normal;
   text-align: left;
@@ -469,6 +471,7 @@ button {
   .WillSelect .text{
     text-align:center;
     background-color: #f0f0f0;
+    margin-bottom: 1rem;
   }
   .WillSelect .Selected {
     background-color: red;
@@ -522,6 +525,9 @@ button {
 }
 
 .MainSufferArear {
+  display:flex;
+  flex-direction: column;
+  justify-content: space-around;
   float: right;
   width: 40%;
   background-color : #f0f0f0;
@@ -721,7 +727,7 @@ button {
 
 .optional_nav .sub_item label {
   display: inline-block;
-  height: 1.2rem;
+  height: 1.3rem;
   overflow: hidden;
   padding: 0 2px 0 16px;
   text-indent: -16px;
