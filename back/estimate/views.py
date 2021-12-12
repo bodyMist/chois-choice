@@ -114,19 +114,18 @@ class Recommendation(APIView):
     #       least_spec[0] = higher_cpu
     #       least_spec[1] = higher_gpu
     #       least_spec[2] = higher_memory
-    # print(least_benchmark[0]['benchmark'])
-    # print(control_cpu['benchmark'])
 
-    # if least_benchmark[0]['benchmark'] < control_cpu['benchmark']:
-    #     least_spec[0] = higher_cpu
-    # if higher_gpu is not None:
-    #   if least_benchmark[1]['benchmark'] < control_gpu['benchmark']:
-    #       least_spec[1] = higher_gpu  
-    # if least_benchmark[2] < control_memory['price']:
-    #     least_spec[2] = higher_memory
-    least_spec[0] = higher_cpu
-    least_spec[1] = higher_gpu  
-    least_spec[2] = higher_memory
+    if least_benchmark[0]['benchmark'] < control_cpu['benchmark']:
+        least_spec[0] = higher_cpu
+    if higher_gpu is not None:
+      if least_benchmark[1]['benchmark'] < control_gpu['benchmark']:
+          least_spec[1] = higher_gpu  
+    if least_benchmark[2] < control_memory['price']:
+        least_spec[2] = higher_memory
+
+    # least_spec[0] = higher_cpu
+    # least_spec[1] = higher_gpu  
+    # least_spec[2] = higher_memory
     if least_spec[1] is None:
       least_spec[1]=component.Component()
     
@@ -155,16 +154,34 @@ class Recommendation(APIView):
       gprice = higher_gpu.price
       mprice = higher_memory.price
     
-    control_group = self.getCpuScores(higher_cpu.name)
+    # control_group = self.getCpuScores(higher_cpu.name)
+    control_cpu = self.getCpuScores(higher_cpu.name)
+    if higher_gpu is not None:
+      control_gpu = self.getGpuScores(higher_gpu.name)
+    control_memory = self.getMemoryScores(higher_memory.name)
+
+
+    if rec_benchmark[0]['benchmark'] < control_cpu['benchmark']:
+        rec_spec[0] = higher_cpu
+    if higher_gpu is not None:
+      if rec_benchmark[1]['benchmark'] < control_gpu['benchmark']:
+          rec_spec[1] = higher_gpu  
+    if rec_benchmark[2] < control_memory['price']:
+        rec_spec[2] = higher_memory    
+
     # if rec_benchmark[0]['benchmark'] < control_group['benchmark']:    
     #   rec_spec[0] = higher_cpu
     #   rec_spec[1] = higher_gpu
     #   rec_spec[2] = higher_memory
-    if rec_price < budget:
-      rec_spec[0] = higher_cpu
-      rec_spec[1] = higher_gpu  
-      rec_spec[2] = higher_memory      
-    else:
+    
+    # if rec_price < budget:
+    #   rec_spec[0] = higher_cpu
+    #   rec_spec[1] = higher_gpu  
+    #   rec_spec[2] = higher_memory      
+    # else:
+    #   rec_spec = least_spec
+    
+    if use_list[0].name == "Internet" and len(use_list) == 1 and rec_price > budget:
       rec_spec = least_spec
     #=================추천 결과를 리스트로 합쳐서 serialize=====================
     result = least_spec + rec_spec
@@ -233,13 +250,21 @@ class Recommendation(APIView):
 
   # 호환성 체크1
   # cpu, gpu, mainboard 간의 소켓 및 지원 규격 체크
+  # 필드가 null이여도 호환 불가를 반환
   def checkCompatibility(self, cpu, memory, mainboard):
     result = True
-    if cpu.socket != mainboard.socket:
+
+    if cpu.socket is None or mainboard.socket is None:
       result = False
-    if memory.type in cpu.memory.type:
+    elif cpu.socket != mainboard.socket:
       result = False
-    if mainboard.memory_type != memory.type:
+    if memory.type is None or cpu.memory is None:
+      result = False  
+    elif memory.type in cpu.memory.type:
+      result = False
+    if mainboard.memory_type is None or memory.type is None:  
+      result = False
+    elif mainboard.memory_type != memory.type:
       result = False
 
     return result
@@ -249,6 +274,11 @@ class Recommendation(APIView):
   def checkFormfactor(self, mainboard, gpu, case, power):
     result = True
     m_formfactor = mainboard.formfactor.split(' ')[0]
+    g_width = gpu.width
+    c_depth = case.depth
+    c_type = re.findall('\(.+\)', '', case.type)
+    power_type = power.type.split(' ')[0]
+    power_type = re.sub('\(\w+\)', '',power_type)
 
     return result
 
@@ -295,29 +325,29 @@ class Recommendation(APIView):
       compare = "benchmark"
       if (llp[compare] == 0 or rlp[compare] == 0):
         compare = "price"
-      if llp[compare] < rlp[compare]:
+      if llp[compare] <= rlp[compare]:
         standard_use.least_processor = uses[i].least_processor
         llp = rlp
       compare = "benchmark"
       if (llg[compare] == 0 or rlg[compare] == 0):
         compare = "price"
-      if llg[compare] < rlg[compare]:
+      if llg[compare] <= rlg[compare]:
         standard_use.least_graphics = uses[i].least_graphics
         llg = rlg
       compare = "benchmark"
-      if (llm < rlm):
+      if (llm <= rlm):
         llm = rlm
       
         # 권장 사양
       if (lrp[compare] == 0 or rrp[compare] == 0):
         compare = "price"
-      if lrp[compare] < rrp[compare]:
+      if lrp[compare] < rrp[compare] or standard_use.rec_processor is None:
         standard_use.rec_processor = uses[i].rec_processor
         lrp = rrp
       compare = "benchmark"
       if (lrg[compare] == 0 or rrg[compare] == 0):
         compare = "price"
-      if lrg[compare] < rrg[compare]:
+      if lrg[compare] < rrg[compare] or standard_use.rec_graphics is None:
         standard_use.rec_graphics = uses[i].rec_graphics
         lrg = rrg
       if (lrm <= rrm):
