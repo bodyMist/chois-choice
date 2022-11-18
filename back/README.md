@@ -27,3 +27,13 @@
     - 사용자는 2초 이상의 실행 시간에는 '느리다'라고 판단하기 때문에 방법을 강구
     - Redis를 이용하여 key=사용자의 입력, value=견적 결과를 저장하고 동일한 요청에 대해 Redis에서 반환
     - 결과적으로 동일 요청에 대해 10ms 이하의 성능을 보장
+
+## 동작 화면
+<p align="left">
+<img src="https://user-images.githubusercontent.com/77658870/202624401-39b650fb-1fac-480d-a757-305d2e464529.png" width="350" height="400"/>
+<img src="https://user-images.githubusercontent.com/77658870/202624405-177a0acd-7a0f-458a-a131-048c9e114db1.png" width="300" height="400"/>
+<img src="https://user-images.githubusercontent.com/77658870/202624415-d7a66854-d665-4adf-8673-4fb40cc06559.png" width="350" height="400"/>
+</p>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/77658870/202624411-11ec47c8-ea5f-4929-ad3a-13ba220f28a3.png" height="400"/>
+</p>
